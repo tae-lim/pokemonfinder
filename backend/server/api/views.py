@@ -3,16 +3,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from pokefinder.models import Pokemon
+from pokefinder.serializers import PokemonSerializer
 
 @api_view(["GET", "POST"])
 def api_home(request, *args, **kwargs):
     """
     DRF API VIEW
     """
-    if request.method != "POST":
-        return Response({"detail": "GET NO"}, status=405)
-    model_data = Pokemon.objects.all().order_by("?").first()
+    instance = Pokemon.objects.all().order_by("?").first()
     data = {}
-    if model_data:
-        data = model_to_dict(model_data)
+    if instance:
+        data = PokemonSerializer(instance).data
     return Response(data)
