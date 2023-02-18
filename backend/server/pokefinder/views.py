@@ -43,12 +43,20 @@ class PokemonListAPIView(generics.ListAPIView):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
 
+class PokemonDestroyAPIView(generics.DestroyAPIView):
+    queryset = Pokemon.objects.all()
+    serializer_class = PokemonSerializer
+    lookup_field = 'pk'
 
+    def perform_destroy(self, instance):
+        # instance stuff here
+        super().perform_destroy(instance)
 
 pokemon_list_create_view = PokemonListCreateAPIView.as_view()
 pokemon_detail_view = PokemonDetailAPIView.as_view()
 pokemon_list_view = PokemonListAPIView.as_view()
 pokemon_update_view = PokemonUpdateAPIView.as_view()
+pokemon_destroy_view = PokemonDestroyAPIView.as_view()
 
 
 '''
