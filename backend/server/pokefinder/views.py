@@ -11,33 +11,6 @@ from .models import Pokemon
 from .serializers import PokemonSerializer
 
 """
-Class-based Views
-
-"""
-
-class PokemonMixinView(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    generics.GenericAPIView
-    ):
-    queryset = Pokemon.objects.all()
-    serializer_class = PokemonSerializer
-    lookup_field = 'pk'
-
-    def get(self, request, *args, **kwargs):
-        print(args, kwargs)
-        pk = kwargs.get('pk')
-        if pk is not None:
-            return self.retrieve(request, *args, **kwargs)
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-pokemon_mixin_view = PokemonMixinView.as_view()
-
-"""
 Functional Views
 
 """
@@ -89,7 +62,35 @@ pokemon_list_view = PokemonListAPIView.as_view()
 pokemon_update_view = PokemonUpdateAPIView.as_view()
 pokemon_destroy_view = PokemonDestroyAPIView.as_view()
 
-'''
+
+"""
+Class-based Views / Mixins
+
+class PokemonMixinView(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    generics.GenericAPIView
+    ):
+    queryset = Pokemon.objects.all()
+    serializer_class = PokemonSerializer
+    lookup_field = 'pk'
+
+    def get(self, request, *args, **kwargs):
+        print(args, kwargs)
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+pokemon_mixin_view = PokemonMixinView.as_view()
+
+"""
+
+"""
 Generics
 
 @api_view(['GET', 'POST'])
@@ -127,4 +128,4 @@ def pokemon_alt_view(request, pk=None, *args, **kwargs):
             return Response(serializer.data)
         return Response({"invald": "not valid data"}, status=400)
 
-'''
+"""
