@@ -1,4 +1,7 @@
+import requests
+
 from rest_framework import generics
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -21,19 +24,35 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         serializer.save(description=description)
         # this is possibly where you do third party api requests @ pokeapi
 
-pokemon_list_create_view = PokemonListCreateAPIView.as_view()
-
 class PokemonDetailAPIView(generics.RetrieveAPIView):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
 
-pokemon_detail_view = PokemonDetailAPIView.as_view()
+class PokemonUpdateAPIView(generics.UpdateAPIView):
+    queryset = Pokemon.objects.all()
+    serializer_class = PokemonSerializer
+    lookup_field = 'pk'
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.description:
+            instance.description = instance.name
+        
 
 class PokemonListAPIView(generics.ListAPIView):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
 
+
+
+pokemon_list_create_view = PokemonListCreateAPIView.as_view()
+pokemon_detail_view = PokemonDetailAPIView.as_view()
 pokemon_list_view = PokemonListAPIView.as_view()
+pokemon_update_view = PokemonUpdateAPIView.as_view()
+
+
+'''
+Generics
 
 @api_view(['GET', 'POST'])
 def pokemon_alt_view(request, pk=None, *args, **kwargs):
@@ -52,6 +71,14 @@ def pokemon_alt_view(request, pk=None, *args, **kwargs):
         return Response(data)
     
     if method == "POST":
+        # FOR LATER POKEAPI USAGE
+        # url = "https://pokeapi.co/api/v2/pokemon/ditto"
+        # r = requests.get(url)
+        # if r.status_code == 200:
+        #     data = r.json()
+        #     return Response(data)
+
+
         serializer = PokemonSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             name = serializer.validated_data.get('name')
@@ -61,3 +88,5 @@ def pokemon_alt_view(request, pk=None, *args, **kwargs):
             serializer.save(description=description)
             return Response(serializer.data)
         return Response({"invald": "not valid data"}, status=400)
+
+'''
