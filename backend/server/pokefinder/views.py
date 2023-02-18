@@ -1,6 +1,6 @@
 import requests
 
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,6 +9,38 @@ from django.shortcuts import get_object_or_404
 
 from .models import Pokemon
 from .serializers import PokemonSerializer
+
+"""
+Class-based Views
+
+"""
+
+class PokemonMixinView(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    generics.GenericAPIView
+    ):
+    queryset = Pokemon.objects.all()
+    serializer_class = PokemonSerializer
+    lookup_field = 'pk'
+
+    def get(self, request, *args, **kwargs):
+        print(args, kwargs)
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+pokemon_mixin_view = PokemonMixinView.as_view()
+
+"""
+Functional Views
+
+"""
 
 class PokemonListCreateAPIView(generics.ListCreateAPIView):
     queryset = Pokemon.objects.all()
@@ -38,7 +70,6 @@ class PokemonUpdateAPIView(generics.UpdateAPIView):
         if not instance.description:
             instance.description = instance.name
         
-
 class PokemonListAPIView(generics.ListAPIView):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
@@ -57,7 +88,6 @@ pokemon_detail_view = PokemonDetailAPIView.as_view()
 pokemon_list_view = PokemonListAPIView.as_view()
 pokemon_update_view = PokemonUpdateAPIView.as_view()
 pokemon_destroy_view = PokemonDestroyAPIView.as_view()
-
 
 '''
 Generics

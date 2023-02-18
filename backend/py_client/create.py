@@ -3,8 +3,8 @@ import requests
 endpoint = "http://localhost:8000/api/pokefinder/"
 
 data = {
-    "name": "Rayquaza",
-    "description": "Sky Legendary"
+    "name": "Dragonite",
+    "description": "PseudoLegendary"
 }
 
 get_response = requests.post(endpoint, json=data)
