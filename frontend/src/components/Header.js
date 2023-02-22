@@ -1,14 +1,18 @@
-import React, { useContext } from 'react';
-import { redirect, Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import Redirect from '../utils/Redirect';
 
 const Header = () => {
   const { user, handleLogout } = useContext(AuthContext);
-  if (!user) {
-		redirect('/login')
-	} 
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   
+  useEffect(() => {
+    if (!user && pathname === '/') {
+      navigate('/login')
+    }
+  }, [user])
+
   return (
     <div>
       {user && <p>Hello {user.username}</p>}
