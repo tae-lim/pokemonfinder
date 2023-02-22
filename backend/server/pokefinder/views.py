@@ -1,9 +1,15 @@
 import requests
+import json
 
-from rest_framework import generics, mixins
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from rest_framework import authentication, generics, mixins, permissions, serializers
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from rest_framework.views import APIView
 
 from django.shortcuts import get_object_or_404
 
@@ -13,21 +19,48 @@ from .serializers import PokemonSerializer
 """
 Functional Views
 
-"""
+""" 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PokemonListCreateAPIView(generics.ListCreateAPIView):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
 
-    # 1:41:25
-    def perform_create(self, serializer):
-        # serializer.save(user=self.request.user)
-        name = serializer.validated_data.get('name')
-        description = serializer.validated_data.get('description') or None
-        if description is None:
-            description = name
-        serializer.save(description=description)
-        # this is possibly where you do third party api requests @ pokeapi
+    # authentication_classes = [authentication.SessionAuthentication]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def fetch_pokemon(self, initial_data):
+        res = requests.get(f'https://pokeapi.co/api/v2/pokemon/{initial_data["Pokemon"].lower()}')
+        external_data = res.json()
+        data = {}
+        data['name'] = initial_data['Pokemon']
+        data['lat'] = initial_data['Lat']
+        data['long'] = initial_data['Long']
+        data['hp'] = external_data['stats'][0]['base_stat']
+        data['attack'] = external_data['stats'][1]['base_stat']
+        data['defense'] = external_data['stats'][2]['base_stat']
+        data['sp_attack'] = external_data['stats'][3]['base_stat']
+        data['sp_defense'] = external_data['stats'][4]['base_stat']
+        data['speed'] = external_data['stats'][5]['base_stat']
+        data['height'] = external_data['height']
+        data['weight'] = external_data['weight']
+        data['image'] = external_data['sprites']['other']['official-artwork']['front_default']
+        data['sprite'] = external_data['sprites']['front_default']
+        return data
+    
+    def create(self, request, *args, **kwargs):
+        initial_data = json.loads(request.body)
+        objects = []
+
+        for item in initial_data:
+            # if item['Pokemon'] and item['Lat'] and item['Long'] and item['Type'] and item['Location'] and 
+            obj = self.fetch_pokemon(item)
+            objects.append(obj)
+
+        serializer = self.get_serializer(data=objects, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
 
 class PokemonDetailAPIView(generics.RetrieveAPIView):
     queryset = Pokemon.objects.all()

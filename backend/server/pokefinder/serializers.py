@@ -2,19 +2,20 @@ from rest_framework import serializers
 
 from .models import Pokemon
 
-class PokemonSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField(read_only=True)
-
+class PokemonSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Pokemon
         fields = [
             'name',
             'description',
-            'region'
+            'hp',
+            'attack',
+            'defense',
+            'sp_attack',
+            'sp_defense',
+            'speed',
+            'height',
+            'weight',
+            'image',
+            'sprite'
         ]
-    
-    def get_region(self, obj):
-        return obj.get_region()
-
-
-# can make primary and secondary serializers
