@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 class Pokemon(models.Model):
     name = models.CharField(max_length=20)
+    lat=models.DecimalField(max_digits=10, decimal_places=6)
+    long=models.DecimalField(max_digits=10, decimal_places=6)
     description=models.TextField(blank=True, null=True)
     hp=models.IntegerField()
     attack=models.IntegerField()

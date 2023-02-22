@@ -15,12 +15,14 @@ export default function CSVParser() {
     });
   }
 
+  const fixDecialPlaces = (num, places) => {
+    return Number(num).toFixed(places);
+  };
+
   const formatData = pokemon => {
     return pokemon.map(item => {
-      if (!item.lat && !item.long) {
-        const [Long, Lat] = selectPolylineSource(item);
-        return { ...item, Lat, Long };
-      }
+      const [long, lat] = item.Long && item.Lat ? [item.Long, item.Lat] :  selectPolylineSource(item);
+      return { ...item, lat: fixDecialPlaces(lat, 6), long: fixDecialPlaces(long, 6) };
     })
   }
 

@@ -8,6 +8,8 @@ class PokemonSerializer(serializers.ModelSerializer):
         fields = [
             'name',
             'description',
+            'lat',
+            'long',
             'hp',
             'attack',
             'defense',

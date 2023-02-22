@@ -34,8 +34,8 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         external_data = res.json()
         data = {}
         data['name'] = initial_data['Pokemon']
-        data['lat'] = initial_data['Lat']
-        data['long'] = initial_data['Long']
+        data['lat'] = initial_data['lat']
+        data['long'] = initial_data['long']
         data['hp'] = external_data['stats'][0]['base_stat']
         data['attack'] = external_data['stats'][1]['base_stat']
         data['defense'] = external_data['stats'][2]['base_stat']
