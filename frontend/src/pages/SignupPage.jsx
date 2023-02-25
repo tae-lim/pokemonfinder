@@ -1,46 +1,41 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
+import AuthContext from '../context/AuthContext';
 import { Box, Paper, Typography, TextField, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 export default function SignupPage() {
-  const handleSubmit = async e => {
-    e.preventDefault();
-    console.log({ 
-      'username': e.target.username.value, 
-      'password1': e.target.password1.value,
-      'password2': e.target.password2.value
-    })
-		try {
-			const res = await fetch('http://127.0.0.1:8000/api/register/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ 
-          'username': e.target.username.value, 
-          'password1': e.target.password1.value,
-          'password2': e.target.password2.value
-        })
-      });
-			if (res.status === 200) {
-				const data = await res.json();
-				// setAuthTokens(data);
-				// setUser(jwt_decode(data.access));
-				// localStorage.setItem('authTokens', JSON.stringify(data));
-				// navigate('/');
-			} else {
-				throw Error('Signup was unsuccessful');
-			}
-		} catch(e) {
-			console.error(e);
-	  }
-  }
+  const { handleSignup } = useContext(AuthContext);
   
   return (
     <Box display="flex" justifyContent="center" alignItems="center" mt={4} height="80vh">
       <Paper sx={{ width: '400px', padding: '40px'}}>
         <Typography variant="h4" align="center" mb={4}>Signup</Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSignup}>
+          <TextField
+            name="firstName"
+            label="First Name"
+            fullWidth
+            variant="outlined" 
+            sx={{ marginBottom: 2 }}
+            required
+          />
+          <TextField
+            name="lastName"
+            label="Last Name"
+            fullWidth
+            variant="outlined" 
+            sx={{ marginBottom: 2 }}
+            required
+          />
+          <TextField
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            variant="outlined" 
+            sx={{ marginBottom: 2 }}
+            required
+          />
           <TextField
             name="username"
             label="Username"
@@ -50,7 +45,7 @@ export default function SignupPage() {
             required
           />
           <TextField
-            name="password1"
+            name="password"
             label="Password"
             type="password"
             fullWidth

@@ -41,7 +41,7 @@ export default function Sidebar(props) {
               onClick={(e)=> props.handleClick(e, item)}
             >
               <ListItemIcon>
-                <img src={item.sprite} alt={item.name} style={{ marginRight: '5px', width: '30px', height: '30px' }} />
+                <img src={item.images.sprite} alt={item.name} style={{ marginRight: '5px', width: '30px', height: '30px' }} />
               </ListItemIcon>
               <ListItemText primary={item.name} />
             </ListItem>

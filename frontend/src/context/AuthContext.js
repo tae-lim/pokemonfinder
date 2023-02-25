@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('http://127.0.0.1:8000/api/token/', {
+			const res = await fetch('http://127.0.0.1:8000/api/users/token/', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -35,6 +35,37 @@ export const AuthProvider = ({ children }) => {
 		}
 	}
 
+  const handleSignup = async e => {
+    e.preventDefault();
+		try {
+			const res = await fetch('http://127.0.0.1:8000/api/users/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ 
+          'first_name': e.target.firstName.value,
+          'last_name': e.target.lastName.value,
+          'email': e.target.email.value,
+					'username': e.target.username.value,
+          'password': e.target.password.value,
+          'password2': e.target.password2.value
+        })
+      });
+			if (res.status === 200 || res.status === 201) {
+				const data = await res.json();
+				setAuthTokens(data);
+				setUser(jwt_decode(data.access));
+				localStorage.setItem('authTokens', JSON.stringify(data));
+				navigate('/');
+			} else {
+				throw Error('Signup was unsuccessful');
+			}
+		} catch(e) {
+			console.error(e);
+	  }
+  }
+
 	const handleLogout = () => {
 		setAuthTokens(null)
 		setUser(null);
@@ -45,6 +76,7 @@ export const AuthProvider = ({ children }) => {
 	const contextData = {
 		user: user,
 		handleLogin: handleLogin,
+		handleSignup: handleSignup,
 		handleLogout: handleLogout
 	}
 

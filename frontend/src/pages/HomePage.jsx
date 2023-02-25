@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Divider, Box } from '@mui/material';
-
+import AuthContext from '../context/AuthContext';
 import Map from '../components/Map';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import PokemonModal from '../components/PokemonModal';
 import PokemonAddModal from '../components/PokemonAddModal';
+import Weather from '../components/Weather';
 
 const uclaCenter = {
 	lat: 34.0700,
@@ -13,14 +14,17 @@ const uclaCenter = {
 };
 
 export default function HomePage() {
+	const { user } = useContext(AuthContext);
 	const [center, setCenter] = useState(uclaCenter);
 	const [pokemon, setPokemon] = useState([]);
+	const [favoritePokemon, setFavoritePokemon] = useState([]);
 	const [selectedPokemon, setSelectedPokemon] = useState({});
 	const [pokemonDetailModalIsOpen, setPokemonDetailModalIsOpen] = useState(false);
 	const [pokemonAddModalIsOpen, setPokemonAddModalIsOpen] = useState(false);
 
 	useEffect(() => {
     fetchPokemon();
+		fetchFavoritePokemon();
   }, []);
 
   const fetchPokemon = async () => {
@@ -31,6 +35,20 @@ export default function HomePage() {
         setPokemon(data);
       } else {
         throw Error('Unable to retrive Pokemon List');
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+	const fetchFavoritePokemon = async () => {
+    try {
+      const res = await fetch(`http://localhost:8000/api/users/${user.user_id}/favorites/pokemon`);
+      if (res.status === 200) {
+        const data = await res.json();
+        setFavoritePokemon(data);
+      } else {
+        throw Error('Unable to retrive Favorite Pokemon List');
       }
     } catch(e) {
       console.error(e);
@@ -49,13 +67,14 @@ export default function HomePage() {
   return (
 		<Container maxWidth="xl" display="flex" justifyContent="center" height="100%" sx={{marginLeft: { sm: '290px' }}}>
 			<Box display="flex" justifyContent="space-around" flexDirection="column" width={"100%"}>
-				<Sidebar pokemon={pokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
+				{/* <Sidebar pokemon={pokemon} favoritePokemon={favoritePokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
 				<Header />
 				<Divider variant="middle" color="primary" sx={{ my: 1 }} />
-				<Map pokemon={pokemon} center={center} handleClick={handleClick} />
+				<Map pokemon={pokemon} center={center} handleClick={handleClick} /> */}
+				<Weather lat={uclaCenter.lat} lng={uclaCenter.lng} />
 			</Box>
 			<PokemonModal pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen} pokemon={pokemon} selectedPokemon={selectedPokemon} setPokemon={setPokemon}/>
-			<PokemonAddModal pokemonAddModalIsOpen={pokemonAddModalIsOpen} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
+			<PokemonAddModal pokemonAddModalIsOpen={pokemonAddModalIsOpen} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen} setNewPokemon={setPokemon}/>
 		</Container>
 	)
 }

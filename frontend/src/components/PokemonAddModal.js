@@ -3,7 +3,7 @@ import { Modal, Box, Typography, Button } from '@mui/material';
 import Papa from 'papaparse';
 import { AToJPolylines, KtoZPolylines } from '../utils/polylines';
 
-export default function PokemonAddModal(props) {
+export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddModalIsOpen, setNewPokemon}) {
   const [pokemon, setPokemon] = useState([]);
 
   const handleCSVUpload = (e) => {
@@ -45,6 +45,7 @@ export default function PokemonAddModal(props) {
 
   const handleSubmit = async (e) => {
 		e.preventDefault();
+    setPokemonAddModalIsOpen(false);
 		try {
       if (!pokemon.length) return;
 			const res = await fetch('http://127.0.0.1:8000/api/pokefinder/', {
@@ -54,8 +55,9 @@ export default function PokemonAddModal(props) {
 				},
 				body: JSON.stringify(pokemon)
 			});
-			if (res.status === 200) {
+			if (res.status === 200 || res.status === 201) {
 				const data = await res.json();
+        setNewPokemon(data);
 			} else {
 				throw Error('Unable to save pokemon');
 			}
@@ -66,8 +68,8 @@ export default function PokemonAddModal(props) {
 
   return (
     <Modal
-      open={props.pokemonAddModalIsOpen}
-      onClose={() => props.setPokemonAddModalIsOpen(false)}
+      open={pokemonAddModalIsOpen}
+      onClose={() => setPokemonAddModalIsOpen(false)}
     > 
       <Box
         sx={{
