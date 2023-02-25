@@ -1,6 +1,12 @@
 import React, { useContext, useEffect } from 'react';
+import { styled, Box, Typography } from '@mui/material';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+
+const PokemonTypography = styled(Typography)({
+  fontFamily: 'PokemonSolidNormal, cursive',
+  color: '#FFCB05'
+});
 
 const Header = () => {
   const { user, handleLogout } = useContext(AuthContext);
@@ -14,18 +20,18 @@ const Header = () => {
   }, [user])
 
   return (
-    <div>
-      {user && <p>Hello {user.username}</p>}
-      {user ? (
-        <p onClick={handleLogout}>Logout</p>
-        ) : (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
-          </>
-        )
+    <Box display="flex" height="100px" justifyContent="space-between" alignItems="center" style={{backgroundColor: "#3466AF"}}>
+      {
+        user && pathname === '/' && 
+        <PokemonTypography variant="h2" style={{ marginLeft: '30px'}}>
+          Pokefinder
+        </PokemonTypography>
       }
-    </div>
+
+      <Box style={{ marginLeft: 'auto' }} >
+        {user && <span style={ {cursor: 'pointer', marginRight: '30px'} } onClick={handleLogout}>Logout</span>}
+      </Box>
+    </Box>
   )
 }
 

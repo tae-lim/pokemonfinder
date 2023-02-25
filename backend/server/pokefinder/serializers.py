@@ -2,22 +2,21 @@ from rest_framework import serializers
 
 from .models import Pokemon
 
-class PokemonSerializer(serializers.ModelSerializer):    
+class PokemonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pokemon
         fields = [
+            'id',
             'name',
             'description',
             'lat',
             'long',
-            'hp',
-            'attack',
-            'defense',
-            'sp_attack',
-            'sp_defense',
-            'speed',
+            'stats',
             'height',
             'weight',
-            'image',
-            'sprite'
+            'images',
+            'types',
+            'has_gender_differences',
+            'location_area_encounters',
+            'moves',
         ]
