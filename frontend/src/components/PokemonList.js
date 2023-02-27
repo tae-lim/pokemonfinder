@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Divider, Button, Drawer, Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon, List, ListItem, ListItemIcon, ListItemText, Pagination, TextField } from '@mui/material';
+import { Divider,  Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon, ListItem, ListItemIcon, ListItemText, Pagination, TextField } from '@mui/material';
+import { PokeballIcon } from '../icons/icons';
 
 export default function PokemonList(props) {
   const [query, setQuery] = React.useState('');
@@ -17,9 +18,10 @@ export default function PokemonList(props) {
   const paginatedPokemon = filteredItems && filteredItems.slice(startIndex, endIndex);
 
   return (
-    <Accordion defaultExpanded>
+    <Accordion>
       <AccordionSummary /*expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}>
-        <ListItemText primary="Discovered Pokemon" />
+        <PokeballIcon color="blue" />
+        <ListItemText primary="Discovered Pokemon" style={ {marginLeft: "10px"}} />
       </AccordionSummary>
       <AccordionDetails>
         <TextField

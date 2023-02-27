@@ -18,16 +18,13 @@ function Map(props) {
   }
 
   return (
-    <>
-    <PokemonModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} pokemon={selectedPokemon}/>
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}
       >
-      
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={props.center || {}}
-        zoom={14}
+        zoom={15}
         >
         { /* Child components, such as markers, info windows, etc. */ }
         <Marker 
@@ -64,7 +61,6 @@ function Map(props) {
           })}
       </GoogleMap>
     </LoadScript>
-    </>
   )
 }
 

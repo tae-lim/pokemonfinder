@@ -170,7 +170,7 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
           <Box display="flex" flexDirection="column" justifyContent="space-between" alignItems="center">
             <Box>
               <Box display="flex" justifyContent="space-between">
-                <Typography id="modal-pokemon-title" variant="h6" component="h2">
+                <Typography id="modal-pokemon-title" variant="h6" component="h2" marginLeft="10px">
                   {selectedPokemonDetail?.name}
                 </Typography>
                 <Box display="flex" width="40%" flexDirection="row" justifyContext="center">
@@ -182,11 +182,12 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
                 </Box>
                 {selectedPokemonDetail?.favorite ?
                   <Star 
-                    style={{ cursor: 'pointer', fill: 'yellow' }} 
+                    style={{ cursor: 'pointer', fill: 'yellow', marginLeft: '20px' }} 
                     onClick={(e) => handleRemoveFavorite(e, selectedPokemon.id)}
                   /> : 
                   <StarBorder
-                    style={{ cursor: 'pointer' }} 
+                    style={{ cursor: 'pointer', marginLeft: '20px' }} 
+                    alignSelf="flex-end"
                     onClick={(e) => handleAddFavorite(e, selectedPokemon.id)}
                   />
                 }
@@ -194,13 +195,13 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
               <Typography id="modal-pokemon-description" sx={{ mt: 2 }}>
                 {selectedPokemonDetail?.description}
               </Typography>
-              <Box display="flex" flexDirection="row" sx={{ mt: 2 }} justifyContent="space-between">
-                <Box display="flex" flexDirection="column" width="40%">
+              <Box display="flex" flexDirection="row" sx={{ mt: 1 }} justifyContent="space-between" alignItems="center">
+                <Box display="flex" flexDirection="column" width="40%" justifyContent="space-between">
                   <Typography id="modal-pokemon-height" >
                     {`Height: ${selectedPokemonDetail?.height / 10}m`}
                   </Typography>
                   <Typography id="modal-pokemon-height">
-                    {`Weight: ${selectedPokemonDetail?.weight} lbs`}
+                    {`Weight: ${selectedPokemonDetail?.weight}lbs`}
                   </Typography>
                   <Typography id="modal-pokemon-gender">
                     {selectedPokemonDetail?.has_gender_differences ? 'Male | Female' : 'Genderless' }

@@ -27,9 +27,8 @@ const Header = () => {
           Pokefinder
         </PokemonTypography>
       }
-
       <Box style={{ marginLeft: 'auto' }} >
-        {user && <span style={ {cursor: 'pointer', marginRight: '30px'} } onClick={handleLogout}>Logout</span>}
+        {user && <Typography style={ {cursor: 'pointer', marginRight: '30px', color: "white"} } onClick={handleLogout}>Logout</Typography>}
       </Box>
     </Box>
   )

@@ -22,13 +22,11 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
 
   const formatData = pokemon => {
     return pokemon.map(item => {
-      if (item.long && item.lat) {
-        return { ...item, Lat: fixDecialPlaces(item.lat, 6), Long: fixDecialPlaces(item.long, 6), polyline: null };
+      if (item.Long && item.Lat) {
+        return { ...item, Lat: Number(fixDecialPlaces(item.Lat, 6)), Long: Number(fixDecialPlaces(item.Long, 6)), polyline: null };
       } else {
         return { ...item, Lat: null, Long: null, polyline: selectPolylineSource(item) }
       }
-      // const [long, lat] = item.Long && item.Lat ? [item.Long, item.Lat] :  selectPolylineSource(item);
-      // return { ...item, lat: fixDecialPlaces(lat, 6), long: fixDecialPlaces(long, 6) };
     })
   }
 

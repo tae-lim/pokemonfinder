@@ -64,12 +64,11 @@ export default function HomePage() {
 	}
 
   return (
-		<Container maxWidth="xl" display="flex" justifyContent="center" height="100%" sx={{marginLeft: { sm: '290px' }}}>
-			<Box display="flex" justifyContent="space-around" flexDirection="column" width={"100%"}>
+		<Container display="flex" maxWidth="xl">
+			<Header />
+			<Box display="flex" justifyContent="space-between" width="100%" height="80.75vh">
 				<Sidebar pokemon={pokemon} favoritePokemon={favoritePokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
-				<Header />
-				<Divider variant="middle" color="primary" sx={{ my: 1 }} />
-				<Map pokemon={pokemon} center={center} handleClick={handleClick} />
+				<Map pokemon={pokemon} center={center} handleClick={handleClick} />		
 			</Box>
 			<PokemonModal 
 				pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} 

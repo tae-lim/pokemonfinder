@@ -39,9 +39,9 @@ export default function Weather({ lat, lng, location, happiness }) {
       {weatherData ? (
         <Box>
           <Typography>Area: {location || weatherData?.name}</Typography>
-          <Typography>Temperature: {weatherData?.main?.temp}</Typography>
+          <Typography>Temperature: {Math.floor(1.8*(weatherData?.main?.temp-273) + 32)} F</Typography>
           <Typography>Description: {weatherData?.weather[0]?.description}</Typography>
-          <Typography>Current Happiness: {calcHappiness(happiness, weatherData?.main?.temp)}</Typography>
+          <Typography>Current Happiness: {calcHappiness(happiness, 1.8*(weatherData?.main?.temp-273) + 32)}</Typography>
         </Box>
       ) : (
         <Typography>Loading weather data...</Typography>

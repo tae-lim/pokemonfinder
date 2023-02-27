@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { Divider, Button, Drawer, Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon, List, ListItem, ListItemIcon, ListItemText, Pagination, TextField } from '@mui/material';
+import React from 'react';
+import { ListItem, Box, ListItemText  } from '@mui/material';
 import PokemonList from './PokemonList';
 import PokemonListFavorites from './PokemonListFavorites';
+import { PokeballIcon } from '../icons/icons';
 
-export default function Sidebar(props) {
+export default function Sidebar({ pokemon, favoritePokemon, handleClick, setPokemonAddModalIsOpen }) {
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-    > 
-      <Button onClick={() => props.setPokemonAddModalIsOpen(true)}>Add Pokemon</Button>
-      <PokemonList pokemon={props.pokemon} handleClick={props.handleClick}/>
-      <PokemonListFavorites pokemon={props.favoritePokemon} handleClick={props.handleClick} />
-    </Drawer>
+    <Box display="flex" flexDirection="column" width="20%" flex="1" overflow="scroll"> 
+      <ListItem>
+        <PokeballIcon color={'red'}/>
+        <ListItemText style={{cursor: 'pointer', marginLeft: '10px  '}} className="MuiAccordion-root" onClick={() => setPokemonAddModalIsOpen(true)} primary="Add Pokemon" />
+      </ListItem>
+      <PokemonList pokemon={pokemon} handleClick={handleClick}/>
+      <PokemonListFavorites pokemon={favoritePokemon} handleClick={handleClick} />
+    </Box>
   )
 }

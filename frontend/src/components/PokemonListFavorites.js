@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Divider, Button, Drawer, Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon, List, ListItem, ListItemIcon, ListItemText, Pagination, TextField } from '@mui/material';
+import { PokeballIcon } from '../icons/icons';
 
 export default function PokemonListFavorites(props) {
   const [query, setQuery] = React.useState('');
@@ -17,9 +18,10 @@ export default function PokemonListFavorites(props) {
   const paginatedPokemon = filteredItems && filteredItems.slice(startIndex, endIndex);
 
   return (
-    <Accordion defaultExpanded>
+    <Accordion>
       <AccordionSummary /*expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}>
-        <ListItemText primary="Favorited Pokemon" />
+        <PokeballIcon color="green" />
+        <ListItemText primary="Favorited Pokemon" style={{marginLeft: "10px"}} s/>
       </AccordionSummary>
       <AccordionDetails>
         <TextField
