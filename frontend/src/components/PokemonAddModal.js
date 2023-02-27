@@ -11,6 +11,7 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
+        // console.log(formatData(results.data));
         setPokemon(formatData(results.data));
       },
     });
@@ -22,8 +23,13 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
 
   const formatData = pokemon => {
     return pokemon.map(item => {
-      const [long, lat] = item.Long && item.Lat ? [item.Long, item.Lat] :  selectPolylineSource(item);
-      return { ...item, lat: fixDecialPlaces(lat, 6), long: fixDecialPlaces(long, 6) };
+      if (item.long && item.lat) {
+        return { ...item, Lat: fixDecialPlaces(item.lat, 6), Long: fixDecialPlaces(item.long, 6), polyline: null };
+      } else {
+        return { ...item, Lat: null, Long: null, polyline: selectPolylineSource(item) }
+      }
+      // const [long, lat] = item.Long && item.Lat ? [item.Long, item.Lat] :  selectPolylineSource(item);
+      // return { ...item, lat: fixDecialPlaces(lat, 6), long: fixDecialPlaces(long, 6) };
     })
   }
 
@@ -36,11 +42,12 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
   const getRandomPolyline = polylines => {
     const selectedPolylines = polylines.coordinates;
     const polylinesIdx = Math.floor(Math.random() * selectedPolylines.length);
+    return selectedPolylines[polylinesIdx].map(polyline => ( { lat: polyline[1], lng: polyline[0] } ));
 
-    const polyline = selectedPolylines[polylinesIdx];
-    const polylineIdx = Math.floor(Math.random() * polyline.length);
+    // const polyline = selectedPolylines[polylinesIdx];
+    // const polylineIdx = Math.floor(Math.random() * polyline.length);
 
-    return polyline[polylineIdx];
+    // return polyline[polylineIdx];
   }
 
   const handleSubmit = async (e) => {

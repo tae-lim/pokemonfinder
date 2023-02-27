@@ -1,5 +1,6 @@
 import requests
 import json
+import random
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -29,6 +30,20 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
     # authentication_classes = [authentication.SessionAuthentication]
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
+    '''
+     updates lat and long with random coordinate from polyline
+     long and lat are not updated in the backend and a random selection is made on frontend due to time crunch
+     would also need a PATCH method invoked during the GET
+    '''
+    # def assign_coordinates(self, data):
+    #     polyline = data['polyline']
+
+    #     if polyline is not None:
+    #         points = [(point[1], point[0]) for point in polyline]
+    #         selected_point = random.choice(points)
+    #         data['lat'], data['long'] = selected_point
+
     def fetch_pokemon(self, initial_data):
         res = requests.get(f'https://pokeapi.co/api/v2/pokemon/{initial_data["Pokemon"].lower()}')
         external_data = res.json()
@@ -46,8 +61,9 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
             'sprite': external_data['sprites']['front_default']
         }
         data['name'] = initial_data['Pokemon']
-        data['lat'] = initial_data['lat']
-        data['long'] = initial_data['long']
+        data['lat'] = initial_data['Lat']
+        data['lng'] = initial_data['Long']
+        data['polyline'] = initial_data['polyline']
         data['height'] = external_data['height']
         data['weight'] = external_data['weight']
         data['types'] = [type['type']['name'] for type in external_data['types']]
@@ -123,7 +139,15 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
 
         for i, obj in enumerate(serializer.data):
             obj['id'] = queryset[i].id
+            if obj['polyline']:
+                coordinates = random.choice(obj['polyline'])
+                obj['lat'] = coordinates['lat']
+                obj['lng'] = coordinates['lng']
+            else:
+                obj['lat'], obj['lng'] = None, None
+
         return Response(serializer.data)
+    
 
 class PokemonDetailAPIView(generics.RetrieveAPIView):
     queryset = Pokemon.objects.all()

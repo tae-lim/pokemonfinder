@@ -147,7 +147,7 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
                   </Typography>
                 </Box>
                 <Box display="flex" flexDirection="column">
-                  <Weather location={selectedPokemon?.location_area_encounters} lat={selectedPokemon?.lat} lng={selectedPokemon?.long} />
+                  <Weather location={selectedPokemon?.location_area_encounters} lat={selectedPokemon?.lat} lng={selectedPokemon?.lng} />
                 </Box>
               </Box>
             </Box>
