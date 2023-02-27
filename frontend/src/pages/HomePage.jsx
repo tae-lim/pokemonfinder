@@ -59,7 +59,7 @@ export default function HomePage() {
     setPokemonDetailModalIsOpen(true);
 		setCenter({
 			lat: Number(pokemon.lat),
-			lng: Number(pokemon.long)
+			lng: Number(pokemon.lng)
 		});
 	}
 
