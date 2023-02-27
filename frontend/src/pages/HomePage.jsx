@@ -6,7 +6,6 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import PokemonModal from '../components/PokemonModal';
 import PokemonAddModal from '../components/PokemonAddModal';
-import Weather from '../components/Weather';
 
 const uclaCenter = {
 	lat: 34.0700,
@@ -67,11 +66,10 @@ export default function HomePage() {
   return (
 		<Container maxWidth="xl" display="flex" justifyContent="center" height="100%" sx={{marginLeft: { sm: '290px' }}}>
 			<Box display="flex" justifyContent="space-around" flexDirection="column" width={"100%"}>
-				{/* <Sidebar pokemon={pokemon} favoritePokemon={favoritePokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
+				<Sidebar pokemon={pokemon} favoritePokemon={favoritePokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
 				<Header />
 				<Divider variant="middle" color="primary" sx={{ my: 1 }} />
-				<Map pokemon={pokemon} center={center} handleClick={handleClick} /> */}
-				<Weather lat={uclaCenter.lat} lng={uclaCenter.lng} />
+				<Map pokemon={pokemon} center={center} handleClick={handleClick} />
 			</Box>
 			<PokemonModal pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen} pokemon={pokemon} selectedPokemon={selectedPokemon} setPokemon={setPokemon}/>
 			<PokemonAddModal pokemonAddModalIsOpen={pokemonAddModalIsOpen} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen} setNewPokemon={setPokemon}/>

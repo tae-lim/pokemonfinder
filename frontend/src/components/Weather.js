@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-export default function WeatherComponent({ lat, lng }) {
+export default function Weather({ lat, lng, location }) {
   const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     const socket = new WebSocket('ws://127.0.0.1:8000/ws/socket-server/');
-
-    // ${window.location.host}
 
     socket.onopen = function (event) {
       console.log("WebSocket connection established.");
@@ -15,29 +13,28 @@ export default function WeatherComponent({ lat, lng }) {
 
     socket.onmessage = function (event) {
       const data = JSON.parse(event.data);
-      console.log('Data:', data)
       setWeatherData(data);
     };
 
-    // socket.onclose = function (event) {
-    //   console.log("WebSocket connection closed.");
-    // };
+    socket.onclose = function (event) {
+      console.log("WebSocket connection closed.");
+    };
 
-    // return () => {
-    //   if (socket.readyState === 1) { // <-- This is important
-    //       socket.close();
-    //   }
-    //  };
+    return () => {
+      if (socket.readyState === 1) {
+          socket.close();
+      }
+     };
   }, []);
 
-  console.log('weatherData', weatherData);
   return (
     <div>
       {weatherData ? (
         <div>
-          <p>City: </p>
-          <p>Temperature:</p>
-          <p>Description:</p>
+          <p>Area: {location || weatherData?.name}</p>
+          <p>Temperature:{weatherData?.main?.temp}</p>
+          <p>Description:{weatherData?.weather[0]?.description}</p>
+          <p>Happiness Level: 'WIP'</p>
         </div>
       ) : (
         <p>Loading weather data...</p>

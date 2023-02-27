@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { pokemonTypeColors } from '../utils/pokemonTypeColors';
+import Weather from './Weather';
 
 ChartJS.register(
   RadialLinearScale,
@@ -106,7 +107,7 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
       >
         <Box display="flex" flexDirection="row">
           <Box flexDirection="column" justifyContent="space-between">
-            <img src={selectedPokemon.images?.image} alt="mew" />
+            <img src={selectedPokemon?.images?.image} alt="mew" />
             {deleteClicked ? 
               <Box width="100%" display="flex" flexDirection="row">
                 <Button onClick={(e) => handleDelete(e, selectedPokemon.id)}>Permanently Delete</Button>
@@ -121,7 +122,7 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
             <Box mb={2}>
               <Box display="flex" justifContent="space-between">
                 <Typography id="modal-pokemon-title" variant="h6" component="h2">
-                  {selectedPokemon.name}
+                  {selectedPokemon?.name}
                 </Typography>
                 <Box display="flex" flexDirection="row">
                   {selectedPokemon?.types?.map(type => (
@@ -131,22 +132,22 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
                 </Box>
               </Box>
               <Typography id="modal-pokemon-description" sx={{ mt: 2 }}>
-                {selectedPokemon.description}
+                {selectedPokemon?.description}
               </Typography>
               <Box display="flex">
                 <Box display="flex" flexDirection="row">
                   <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
-                    {`Height: ${selectedPokemon.height / 10}m`}
+                    {`Height: ${selectedPokemon?.height / 10}m`}
                   </Typography>
                   <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
-                    {`Weight: ${selectedPokemon.weight} lbs`}
+                    {`Weight: ${selectedPokemon?.weight} lbs`}
                   </Typography>
                   <Typography id="modal-pokemon-gender" sx={{ mt: 2 }}>
-                    {selectedPokemon.has_gender_differences ? 'Male | Female' : 'Genderless' }
+                    {selectedPokemon?.has_gender_differences ? 'Male | Female' : 'Genderless' }
                   </Typography>
                 </Box>
                 <Box display="flex" flexDirection="column">
-
+                  <Weather location={selectedPokemon?.location_area_encounters} lat={selectedPokemon?.lat} lng={selectedPokemon?.long} />
                 </Box>
               </Box>
             </Box>
