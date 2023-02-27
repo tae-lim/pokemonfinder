@@ -22,3 +22,10 @@ docker-compose run backend python manage.py migrate
 ```
 docker-compose up
 ```
+
+5. Check volume [Optional]
+
+Volume should be called pokemonfinder_db-data
+```
+docker volume ls
+```
