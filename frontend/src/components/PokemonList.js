@@ -25,6 +25,7 @@ export default function PokemonList(props) {
         <TextField
           label="Search"
           variant="outlined"
+          size="small"
           fullWidth
           value={query}
           onChange={(event) => setQuery(event.target.value)}

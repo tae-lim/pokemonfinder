@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Box, Typography } from '@mui/material';
 
 export default function Weather({ lat, lng, location, happiness }) {
   const [weatherData, setWeatherData] = useState(null);
@@ -34,17 +35,17 @@ export default function Weather({ lat, lng, location, happiness }) {
   }
 
   return (
-    <div>
+    <Box display="flex" flexDirection="column">
       {weatherData ? (
-        <div>
-          <p>Area: {location || weatherData?.name}</p>
-          <p>Temperature:{weatherData?.main?.temp}</p>
-          <p>Description:{weatherData?.weather[0]?.description}</p>
-          <p>Current Happiness:{calcHappiness(happiness, weatherData?.main?.temp)}</p>
-        </div>
+        <Box>
+          <Typography>Area: {location || weatherData?.name}</Typography>
+          <Typography>Temperature: {weatherData?.main?.temp}</Typography>
+          <Typography>Description: {weatherData?.weather[0]?.description}</Typography>
+          <Typography>Current Happiness: {calcHappiness(happiness, weatherData?.main?.temp)}</Typography>
+        </Box>
       ) : (
-        <p>Loading weather data...</p>
+        <Typography>Loading weather data...</Typography>
       )}
-    </div>
+    </Box>
   );
 }
