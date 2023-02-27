@@ -1,18 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import { Modal, Box, Typography, Button } from '@mui/material';
+import { Star, StarBorder } from '@mui/icons-material';
 import {
   Chart as ChartJS,
   RadialLinearScale,
   PointElement,
   LineElement,
-  Filler,
-  Tooltip,
-  Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { pokemonTypeColors } from '../utils/pokemonTypeColors';
 import Weather from './Weather';
+
 
 ChartJS.register(
   RadialLinearScale,
@@ -20,9 +19,20 @@ ChartJS.register(
   LineElement
 );
 
-export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailModalIsOpen, setPokemonDetailModalIsOpen, setPokemon }) {
+const uclaCoordinates = {
+	lat: 34.0700,
+	lng: -118.4398
+};
+
+export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setFavoritePokemon, selectedPokemon, pokemonDetailModalIsOpen, setPokemonDetailModalIsOpen, setPokemon }) {
   const { user } = useContext(AuthContext);
   const [deleteClicked, setDeleteClicked] = useState(false);
+  const [selectedPokemonDetail, setSelectedPokemonDetail] = useState(selectedPokemon);
+
+  useEffect(() => {
+    getDetails(pokemon, favoritePokemon, selectedPokemon)
+  }, [pokemon, favoritePokemon, selectedPokemon])
+
   const handleDelete = async (e, id) => {
     setDeleteClicked(false);
     setPokemonDetailModalIsOpen(false);
@@ -41,6 +51,24 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
     }
   }
 
+  const getDetails = (pokemon, favoritePokemon, selectedPokemon) => {
+    if (!pokemon || !favoritePokemon || !selectedPokemon) return;
+
+    let pokemonDetail = selectedPokemon;
+    if (!selectedPokemon?.lat && !selectedPokemon?.lng) {
+      const item = pokemon.find(item => item.id === selectedPokemon.id);
+      pokemonDetail = { ...pokemonDetail, lat: item?.lat, lng: item?.lng };
+    }
+    if (favoritePokemon?.find(item => item.id === selectedPokemon.id)) {
+      pokemonDetail = { ...pokemonDetail, favorite: true};
+    } else {
+      pokemonDetail = { ...pokemonDetail, favorite: false};
+    }
+
+    setCenter({lat: pokemonDetail?.lat || uclaCoordinates.lat, lng: pokemonDetail?.lng || uclaCoordinates.lng })
+    setSelectedPokemonDetail(pokemonDetail);
+  }
+
   const handleClose = () => {
     setDeleteClicked(false);
     setPokemonDetailModalIsOpen(false)
@@ -57,7 +85,9 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
 				body: JSON.stringify({ user_id: user.user_id, pokemon_id: id })
 			});
 			if (res.status === 200 || res.status === 201) {
-        const data = await res.json()
+        const pokemon = {...selectedPokemonDetail, favorite: true};
+        setFavoritePokemon([...favoritePokemon, pokemon]);
+        setSelectedPokemonDetail(pokemon)
 			} else {
 				throw Error('Unable to favorite pokemon');
 			}
@@ -73,7 +103,8 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
           method: 'DELETE',
         });
         if (res.status === 204) {
-          console.log('OMFG DONT TOUCH ANTYING');
+          setFavoritePokemon(favoritePokemon.filter(pokemon => id !== pokemon.id));
+          setSelectedPokemonDetail({ ...selectedPokemonDetail, favorite: false})
         } else {
         	throw Error('Unable to favorite pokemon');
         }
@@ -82,9 +113,25 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
       }
   }
 
+  const calcDistance = (lat1, lng1, lat2, lng2) => {
+    if (!lat1 || !lng1 || !lat1 || !lat2) return 0;
+    const deg2rad = (deg) => deg * (Math.PI/180);
+    const earthRadiusKm = 6371; // radius of the Earth in km
+    const dLat = deg2rad(lat2-lat1);
+    const dLon = deg2rad(lng2-lng1); 
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+      ; 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const distance = earthRadiusKm * c; // distance in km
+    return distance.toFixed(2);
+  }
+
   return (
     <Modal
-      open={pokemonDetailModalIsOpen}
+      open={pokemonDetailModalIsOpen || false}
       onClose={() => handleClose()}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -107,7 +154,7 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
       >
         <Box display="flex" flexDirection="row">
           <Box flexDirection="column" justifyContent="space-between">
-            <img src={selectedPokemon?.images?.image} alt="mew" />
+            <img src={selectedPokemonDetail?.images?.image} alt="mew" />
             {deleteClicked ? 
               <Box width="100%" display="flex" flexDirection="row">
                 <Button onClick={(e) => handleDelete(e, selectedPokemon.id)}>Permanently Delete</Button>
@@ -115,39 +162,47 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
               </Box> :
               <Button onClick={() => setDeleteClicked(true)}>Delete</Button>
             }
-            <Button onClick={(e) =>handleAddFavorite(e, selectedPokemon.id)}>Favorite</Button>
-            <Button onClick={(e) =>handleRemoveFavorite(e, selectedPokemon.id)}>Remove Favorite</Button>
+            {selectedPokemonDetail?.favorite ?
+              <Star 
+                style={{ cursor: 'pointer', fill: 'yellow' }} 
+                onClick={(e) => handleRemoveFavorite(e, selectedPokemon.id)}
+              /> : 
+              <StarBorder
+                style={{ cursor: 'pointer' }} 
+                onClick={(e) => handleAddFavorite(e, selectedPokemon.id)}
+              />
+            }
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="space-between" flex="2">
             <Box mb={2}>
               <Box display="flex" justifContent="space-between">
                 <Typography id="modal-pokemon-title" variant="h6" component="h2">
-                  {selectedPokemon?.name}
+                  {selectedPokemonDetail?.name}
                 </Typography>
                 <Box display="flex" flexDirection="row">
-                  {selectedPokemon?.types?.map(type => (
+                  {selectedPokemonDetail?.types?.map(type => (
                     <Box sx={{ backgroundColor: pokemonTypeColors[type], width: '50px', height: '50px' }}>
                       <Typography sx={{ mt: 2 }}>{type}</Typography></Box>
                   ))}
                 </Box>
               </Box>
               <Typography id="modal-pokemon-description" sx={{ mt: 2 }}>
-                {selectedPokemon?.description}
+                {selectedPokemonDetail?.description}
               </Typography>
               <Box display="flex">
                 <Box display="flex" flexDirection="row">
                   <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
-                    {`Height: ${selectedPokemon?.height / 10}m`}
+                    {`Height: ${selectedPokemonDetail?.height / 10}m`}
                   </Typography>
                   <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
-                    {`Weight: ${selectedPokemon?.weight} lbs`}
+                    {`Weight: ${selectedPokemonDetail?.weight} lbs`}
                   </Typography>
                   <Typography id="modal-pokemon-gender" sx={{ mt: 2 }}>
-                    {selectedPokemon?.has_gender_differences ? 'Male | Female' : 'Genderless' }
+                    {selectedPokemonDetail?.has_gender_differences ? 'Male | Female' : 'Genderless' }
                   </Typography>
                 </Box>
                 <Box display="flex" flexDirection="column">
-                  <Weather location={selectedPokemon?.location_area_encounters} lat={selectedPokemon?.lat} lng={selectedPokemon?.lng} />
+                  <Weather location={selectedPokemonDetail?.location_area_encounters} lat={selectedPokemonDetail?.lat} lng={selectedPokemonDetail?.lng} happiness={selectedPokemonDetail?.stats?.happiness}/>
                 </Box>
               </Box>
             </Box>
@@ -158,12 +213,12 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
                   datasets: [
                     {
                       data: [
-                        selectedPokemon?.stats?.hp, 
-                        selectedPokemon?.stats?.attack, 
-                        selectedPokemon?.stats?.defense, 
-                        selectedPokemon?.stats?.sp_attack, 
-                        selectedPokemon?.stats?.sp_defense, 
-                        selectedPokemon?.stats?.speed
+                        selectedPokemonDetail?.stats?.hp, 
+                        selectedPokemonDetail?.stats?.attack, 
+                        selectedPokemonDetail?.stats?.defebnse, 
+                        selectedPokemonDetail?.stats?.sp_attack, 
+                        selectedPokemonDetail?.stats?.sp_defense, 
+                        selectedPokemonDetail?.stats?.speed
                       ],
                       backgroundColor: 'rgba(255, 99, 132, 0.2)',
                       borderColor: 'rgba(255, 99, 132, 1)',
@@ -173,8 +228,7 @@ export default function PokemonModal({ pokemon, selectedPokemon, pokemonDetailMo
                 }}
               />
             </Box>
-
-            
+            Distance: {calcDistance(selectedPokemonDetail?.lat, selectedPokemonDetail?.lng, uclaCoordinates.lat, uclaCoordinates.lng)} KM
           </Box>
         </Box>
       </Box>

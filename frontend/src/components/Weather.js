@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function Weather({ lat, lng, location }) {
+export default function Weather({ lat, lng, location, happiness }) {
   const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
@@ -27,6 +27,12 @@ export default function Weather({ lat, lng, location }) {
      };
   }, []);
 
+  const calcHappiness = (baseHappiness, temperature) => {
+    const variance = Math.random() * 0.4 - 0.2;
+    const happiness = baseHappiness * (1 + variance * (temperature - temperature) / temperature);
+    return happiness >= 0 ? happiness : 0
+  }
+
   return (
     <div>
       {weatherData ? (
@@ -34,7 +40,7 @@ export default function Weather({ lat, lng, location }) {
           <p>Area: {location || weatherData?.name}</p>
           <p>Temperature:{weatherData?.main?.temp}</p>
           <p>Description:{weatherData?.weather[0]?.description}</p>
-          <p>Happiness Level: 'WIP'</p>
+          <p>Current Happiness:{calcHappiness(happiness, weatherData?.main?.temp)}</p>
         </div>
       ) : (
         <p>Loading weather data...</p>

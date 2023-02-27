@@ -11,7 +11,6 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
-        // console.log(formatData(results.data));
         setPokemon(formatData(results.data));
       },
     });
@@ -43,11 +42,6 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
     const selectedPolylines = polylines.coordinates;
     const polylinesIdx = Math.floor(Math.random() * selectedPolylines.length);
     return selectedPolylines[polylinesIdx].map(polyline => ( { lat: polyline[1], lng: polyline[0] } ));
-
-    // const polyline = selectedPolylines[polylinesIdx];
-    // const polylineIdx = Math.floor(Math.random() * polyline.length);
-
-    // return polyline[polylineIdx];
   }
 
   const handleSubmit = async (e) => {
@@ -75,7 +69,7 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
 
   return (
     <Modal
-      open={pokemonAddModalIsOpen}
+      open={pokemonAddModalIsOpen || false}
       onClose={() => setPokemonAddModalIsOpen(false)}
     > 
       <Box

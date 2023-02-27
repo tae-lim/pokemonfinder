@@ -71,7 +71,16 @@ export default function HomePage() {
 				<Divider variant="middle" color="primary" sx={{ my: 1 }} />
 				<Map pokemon={pokemon} center={center} handleClick={handleClick} />
 			</Box>
-			<PokemonModal pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen} pokemon={pokemon} selectedPokemon={selectedPokemon} setPokemon={setPokemon}/>
+			<PokemonModal 
+				pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} 
+				setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen} 
+				pokemon={pokemon} 
+				setPokemon={setPokemon}
+				favoritePokemon={favoritePokemon}
+				setFavoritePokemon={setFavoritePokemon}
+				selectedPokemon={selectedPokemon}
+				setCenter={setCenter}
+			/>
 			<PokemonAddModal pokemonAddModalIsOpen={pokemonAddModalIsOpen} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen} setNewPokemon={setPokemon}/>
 		</Container>
 	)
