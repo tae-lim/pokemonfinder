@@ -143,8 +143,6 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
                 coordinates = random.choice(obj['polyline'])
                 obj['lat'] = coordinates['lat']
                 obj['lng'] = coordinates['lng']
-            else:
-                obj['lat'], obj['lng'] = None, None
 
         return Response(serializer.data)
     
