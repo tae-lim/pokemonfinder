@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import { Modal, Box, Divider, Typography, Button } from '@mui/material';
 import { Star, StarBorder } from '@mui/icons-material';
 import {
   Chart as ChartJS,
@@ -43,6 +43,7 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
 			if (res.status === 204) {
         const filteredPokemon = pokemon.filter(item => item.id !== id)
         setPokemon(filteredPokemon);
+        setFavoritePokemon(favoritePokemon.filter(item => item.id !== id));
 			} else {
 				throw Error('Unable to delete pokemon');
 			}
@@ -146,67 +147,69 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
           border: '2px solid #000',
           boxShadow: 24,
           p: 4,
-          display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column'
         }}
       >
         <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" justifyContent="space-between">
+          <Box display="flex" flexDirection="column" justifyContent="space-around" alignItems="center">
             <img src={selectedPokemonDetail?.images?.image} alt="mew" />
-            {deleteClicked ? 
-              <Box width="100%" display="flex" flexDirection="row">
-                <Button onClick={(e) => handleDelete(e, selectedPokemon.id)}>Permanently Delete</Button>
-                <Button onClick={() => setDeleteClicked(false)}>Cancel</Button>
-              </Box> :
-              <Button onClick={() => setDeleteClicked(true)}>Delete</Button>
-            }
-            {selectedPokemonDetail?.favorite ?
-              <Star 
-                style={{ cursor: 'pointer', fill: 'yellow' }} 
-                onClick={(e) => handleRemoveFavorite(e, selectedPokemon.id)}
-              /> : 
-              <StarBorder
-                style={{ cursor: 'pointer' }} 
-                onClick={(e) => handleAddFavorite(e, selectedPokemon.id)}
-              />
-            }
+            <Box display="flex" flexDirection="row">
+              {selectedPokemonDetail?.moves?.map(move => {
+                return (
+                  <Box display="flex" justifyContent="center" border="1px solid black" width="120px">
+                    <Typography>{move.move_name.split('-').join(' ')}</Typography>
+                  </Box>
+                )
+              })}
+            </Box>
+            <Typography alignSelf="center" width="50%"> Distance: {calcDistance(selectedPokemonDetail?.lat, selectedPokemonDetail?.lng, uclaCoordinates.lat, uclaCoordinates.lng)} KM</Typography>
           </Box>
-          <Box display="flex" flexDirection="column" justifyContent="space-between" flex="2">
-            <Box mb={2}>
-              <Box display="flex" justifContent="space-between">
+          <Divider variant="middle" color="black" sx={{ my: 1 }} />
+          <Box display="flex" flexDirection="column" justifyContent="space-between" alignItems="center">
+            <Box>
+              <Box display="flex" justifyContent="space-between">
                 <Typography id="modal-pokemon-title" variant="h6" component="h2">
                   {selectedPokemonDetail?.name}
                 </Typography>
-                <Box display="flex" flexDirection="row">
+                <Box display="flex" width="40%" flexDirection="row" justifyContext="center">
                   {selectedPokemonDetail?.types?.map(type => (
-                    <Box sx={{ backgroundColor: pokemonTypeColors[type], width: '50px', height: '50px' }}>
-                      <Typography sx={{ mt: 2 }}>{type}</Typography></Box>
+                    <Box ml="10px" display="flex" justifyContent="center" alignItems="center" height="40px" width="50%" sx={{ backgroundColor: pokemonTypeColors[type], borderRadius:"10%" }}>
+                      <Typography>{type[0].toUpperCase() + type.slice(1)}</Typography>
+                    </Box>
                   ))}
                 </Box>
+                {selectedPokemonDetail?.favorite ?
+                  <Star 
+                    style={{ cursor: 'pointer', fill: 'yellow' }} 
+                    onClick={(e) => handleRemoveFavorite(e, selectedPokemon.id)}
+                  /> : 
+                  <StarBorder
+                    style={{ cursor: 'pointer' }} 
+                    onClick={(e) => handleAddFavorite(e, selectedPokemon.id)}
+                  />
+                }
               </Box>
               <Typography id="modal-pokemon-description" sx={{ mt: 2 }}>
                 {selectedPokemonDetail?.description}
               </Typography>
-              <Box display="flex">
-                <Box display="flex" flexDirection="row">
-                  <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
+              <Box display="flex" flexDirection="row" sx={{ mt: 2 }} justifyContent="space-between">
+                <Box display="flex" flexDirection="column" width="40%">
+                  <Typography id="modal-pokemon-height" >
                     {`Height: ${selectedPokemonDetail?.height / 10}m`}
                   </Typography>
-                  <Typography id="modal-pokemon-height" sx={{ mt: 2 }}>
+                  <Typography id="modal-pokemon-height">
                     {`Weight: ${selectedPokemonDetail?.weight} lbs`}
                   </Typography>
-                  <Typography id="modal-pokemon-gender" sx={{ mt: 2 }}>
+                  <Typography id="modal-pokemon-gender">
                     {selectedPokemonDetail?.has_gender_differences ? 'Male | Female' : 'Genderless' }
                   </Typography>
                 </Box>
-                <Box display="flex" flexDirection="column">
-                  <Weather location={selectedPokemonDetail?.location_area_encounters} lat={selectedPokemonDetail?.lat} lng={selectedPokemonDetail?.lng} happiness={selectedPokemonDetail?.stats?.happiness}/>
-                </Box>
+                <Weather location={selectedPokemonDetail?.location_area_encounters} lat={selectedPokemonDetail?.lat} lng={selectedPokemonDetail?.lng} happiness={selectedPokemonDetail?.stats?.happiness}/>
               </Box>
             </Box>
-            <Box flex="1" display="flex" justifyContent="center" alignItems="center">
+            <Box height="50%">
               <Radar
                 data={{
                   labels: ['HP', 'Attack', 'Defense', 'Sp. Attack', 'Sp. Defense', 'Speed'],
@@ -228,7 +231,15 @@ export default function PokemonModal({ pokemon, setCenter, favoritePokemon, setF
                 }}
               />
             </Box>
-            Distance: {calcDistance(selectedPokemonDetail?.lat, selectedPokemonDetail?.lng, uclaCoordinates.lat, uclaCoordinates.lng)} KM
+            <Box display="flex" width="100%" justifyContent="center">
+              {deleteClicked ? 
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                  <Button width="40%" onClick={(e) => handleDelete(e, selectedPokemon.id)}>Permanently Delete</Button>
+                  <Button width="40%" onClick={() => setDeleteClicked(false)}>Cancel</Button>
+                </Box> :
+                <Button alignSelf="center" onClick={() => setDeleteClicked(true)}>Delete</Button>
+              }
+            </Box>
           </Box>
         </Box>
       </Box>
