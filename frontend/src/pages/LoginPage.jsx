@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { Box, Paper, Typography, TextField, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -35,7 +35,8 @@ export default function LoginPage() {
             color="primary"
             fullWidth
             sx={{ marginBottom: 2 }}
-            type="submit">
+            type="submit"
+          >
             Login
           </Button>
           <Box display="flex" justifyContent="center">

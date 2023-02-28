@@ -32,8 +32,7 @@ export default function PokemonListFavorites(props) {
 
   return (
     <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMore />} aria-controls={`pokemon-sidebar-content`}>
+      <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`pokemon-sidebar-content`}>
         <PokeballIcon color="green" />
         <ListItemText primary="Favorited Pokemon" style={{ marginLeft: '10px' }} s />
       </AccordionSummary>

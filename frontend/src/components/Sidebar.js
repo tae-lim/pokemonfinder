@@ -16,7 +16,8 @@ export default function Sidebar({
       <ListItem
         style={{ cursor: 'pointer' }}
         className="MuiAccordion-root"
-        onClick={() => setPokemonAddModalIsOpen(true)}>
+        onClick={() => setPokemonAddModalIsOpen(true)}
+      >
         <PokeballIcon color={'red'} />
         <ListItemText style={{ marginLeft: '10px' }} primary="Add Pokemon" />
         <AddIcon />

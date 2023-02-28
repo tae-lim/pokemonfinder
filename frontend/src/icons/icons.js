@@ -10,7 +10,8 @@ export const PokeballIcon = ({ color }) => {
       stroke={color}
       fill="none"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       {' '}
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />{' '}
       <circle cx="9" cy="9" r="9" transform="translate(3 3)" /> <circle cx="12" cy="12" r="3" />{' '}

@@ -42,7 +42,13 @@ export default function Weather({ lat, lng, location, happiness }) {
           <Typography>
             Temperature: {Math.floor(1.8 * (weatherData?.main?.temp - 273) + 32)} F
           </Typography>
-          <Typography>Description: {weatherData?.weather[0]?.description.split(' ').map((move => move[0].toUpperCase() + move.slice(1))).join(' ')}</Typography>
+          <Typography>
+            Description:{' '}
+            {weatherData?.weather[0]?.description
+              .split(' ')
+              .map((move) => move[0].toUpperCase() + move.slice(1))
+              .join(' ')}
+          </Typography>
           <Typography>
             Current Happiness:{' '}
             {calcHappiness(happiness, 1.8 * (weatherData?.main?.temp - 273) + 32)}

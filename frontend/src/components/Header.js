@@ -25,7 +25,8 @@ const Header = () => {
       height="100px"
       justifyContent="space-between"
       alignItems="center"
-      style={{ backgroundColor: '#3466AF' }}>
+      style={{ backgroundColor: '#3466AF' }}
+    >
       {user && pathname === '/' && (
         <PokemonTypography variant="h2" style={{ marginLeft: '30px' }}>
           Pokefinder
@@ -35,7 +36,8 @@ const Header = () => {
         {user && (
           <Typography
             style={{ cursor: 'pointer', marginRight: '30px', color: 'white' }}
-            onClick={handleLogout}>
+            onClick={handleLogout}
+          >
             Logout
           </Typography>
         )}
