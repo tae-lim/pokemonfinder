@@ -9,11 +9,7 @@ import SignupPage from './pages/SignupPage';
 // import ErrorPage from './pages/ErrorPage';
 import Header from './components/Header';
 
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

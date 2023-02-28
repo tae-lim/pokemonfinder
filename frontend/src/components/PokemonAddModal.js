@@ -3,7 +3,11 @@ import { Modal, Box, Typography, Button } from '@mui/material';
 import Papa from 'papaparse';
 import { AToJPolylines, KtoZPolylines } from '../utils/polylines';
 
-export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddModalIsOpen, setNewPokemon}) {
+export default function PokemonAddModal({
+  pokemonAddModalIsOpen,
+  setPokemonAddModalIsOpen,
+  setNewPokemon
+}) {
   const [pokemon, setPokemon] = useState([]);
 
   const handleCSVUpload = (e) => {
@@ -12,64 +16,69 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
       skipEmptyLines: true,
       complete: function (results) {
         setPokemon(formatData(results.data));
-      },
+      }
     });
-  }
+  };
 
   const fixDecialPlaces = (num, places) => {
     return Number(num).toFixed(places);
   };
 
-  const formatData = pokemon => {
-    return pokemon.map(item => {
+  const formatData = (pokemon) => {
+    return pokemon.map((item) => {
       if (item.Long && item.Lat) {
-        return { ...item, Lat: Number(fixDecialPlaces(item.Lat, 6)), Long: Number(fixDecialPlaces(item.Long, 6)), polyline: null };
+        return {
+          ...item,
+          Lat: Number(fixDecialPlaces(item.Lat, 6)),
+          Long: Number(fixDecialPlaces(item.Long, 6)),
+          polyline: null
+        };
       } else {
-        return { ...item, Lat: null, Long: null, polyline: selectPolylineSource(item) }
+        return { ...item, Lat: null, Long: null, polyline: selectPolylineSource(item) };
       }
-    })
-  }
+    });
+  };
 
-  const selectPolylineSource = pokemon => {
-    return pokemon.Pokemon[0].toLowerCase() < 'k' ? 
-      getRandomPolyline(AToJPolylines) :
-      getRandomPolyline(KtoZPolylines);
-  }
+  const selectPolylineSource = (pokemon) => {
+    return pokemon.Pokemon[0].toLowerCase() < 'k'
+      ? getRandomPolyline(AToJPolylines)
+      : getRandomPolyline(KtoZPolylines);
+  };
 
-  const getRandomPolyline = polylines => {
+  const getRandomPolyline = (polylines) => {
     const selectedPolylines = polylines.coordinates;
     const polylinesIdx = Math.floor(Math.random() * selectedPolylines.length);
-    return selectedPolylines[polylinesIdx].map(polyline => ( { lat: polyline[1], lng: polyline[0] } ));
-  }
+    return selectedPolylines[polylinesIdx].map((polyline) => ({
+      lat: polyline[1],
+      lng: polyline[0]
+    }));
+  };
 
   const handleSubmit = async (e) => {
-		e.preventDefault();
+    e.preventDefault();
     setPokemonAddModalIsOpen(false);
-		try {
+    try {
       if (!pokemon.length) return;
-			const res = await fetch('http://127.0.0.1:8000/api/pokefinder/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(pokemon)
-			});
-			if (res.status === 200 || res.status === 201) {
-				const data = await res.json();
+      const res = await fetch('http://127.0.0.1:8000/api/pokefinder/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(pokemon)
+      });
+      if (res.status === 200 || res.status === 201) {
+        const data = await res.json();
         setNewPokemon(data);
-			} else {
-				throw Error('Unable to save pokemon');
-			}
-		} catch(e) {
-			console.error(e);
-		}
-	}
+      } else {
+        throw Error('Unable to save pokemon');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
-    <Modal
-      open={pokemonAddModalIsOpen || false}
-      onClose={() => setPokemonAddModalIsOpen(false)}
-    > 
+    <Modal open={pokemonAddModalIsOpen || false} onClose={() => setPokemonAddModalIsOpen(false)}>
       <Box
         sx={{
           position: 'absolute',
@@ -87,18 +96,19 @@ export default function PokemonAddModal({ pokemonAddModalIsOpen, setPokemonAddMo
           padding: '50px'
         }}
       >
-        <Typography id="modal-add-pokemon-title" variant="h6">Add Pokemon</Typography>
-        <Typography id="modal-add-pokemon-description">You can add Pokemon here. Currently supports .csv</Typography>
-        <Box sx={{height: '50px', width: '100%'}}>
-          <input 
-            type="file"
-            name="file"
-            accept=".csv"
-            onChange={handleCSVUpload}
-          />
+        <Typography id="modal-add-pokemon-title" variant="h6">
+          Add Pokemon
+        </Typography>
+        <Typography id="modal-add-pokemon-description">
+          You can add Pokemon here. Currently supports .csv
+        </Typography>
+        <Box sx={{ height: '50px', width: '100%' }}>
+          <input type="file" name="file" accept=".csv" onChange={handleCSVUpload} />
         </Box>
-        <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>Submit</Button>
+        <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+          Submit
+        </Button>
       </Box>
     </Modal>
-  )
+  );
 }

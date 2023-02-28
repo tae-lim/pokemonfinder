@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
-import { Divider, Button, Drawer, Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon, List, ListItem, ListItemIcon, ListItemText, Pagination, TextField } from '@mui/material';
+import {
+  Divider,
+  Button,
+  Drawer,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  ExpandMoreIcon,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Pagination,
+  TextField
+} from '@mui/material';
 import { PokeballIcon } from '../icons/icons';
 
 export default function PokemonListFavorites(props) {
@@ -14,14 +28,18 @@ export default function PokemonListFavorites(props) {
   const numPages = Math.ceil(props.pokemon.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const filteredItems = props.pokemon && props.pokemon.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
+  const filteredItems =
+    props.pokemon &&
+    props.pokemon.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
   const paginatedPokemon = filteredItems && filteredItems.slice(startIndex, endIndex);
 
   return (
     <Accordion>
-      <AccordionSummary /*expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}>
+      <AccordionSummary
+        /*expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}
+      >
         <PokeballIcon color="green" />
-        <ListItemText primary="Favorited Pokemon" style={{marginLeft: "10px"}} s/>
+        <ListItemText primary="Favorited Pokemon" style={{ marginLeft: '10px' }} s />
       </AccordionSummary>
       <AccordionDetails>
         <TextField
@@ -34,27 +52,24 @@ export default function PokemonListFavorites(props) {
           style={{ marginBottom: '10px' }}
         />
         <Divider variant="middle" color="primary" sx={{ my: 1 }} />
-        {paginatedPokemon && paginatedPokemon.map(item => (
-          <ListItem
-            sx={{cursor: 'pointer'}}
-            onClick={(e)=> props.handleClick(e, item)}
-          >
-            <ListItemIcon>
-              <img src={item.images.sprite} alt={item.name} style={{ marginRight: '5px', width: '30px', height: '30px' }} />
-            </ListItemIcon>
-            <ListItemText primary={item.name} />
-          </ListItem>
-        ))}
+        {paginatedPokemon &&
+          paginatedPokemon.map((item) => (
+            <ListItem sx={{ cursor: 'pointer' }} onClick={(e) => props.handleClick(e, item)}>
+              <ListItemIcon>
+                <img
+                  src={item.images.sprite}
+                  alt={item.name}
+                  style={{ marginRight: '5px', width: '30px', height: '30px' }}
+                />
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </ListItem>
+          ))}
         <Divider variant="middle" color="primary" sx={{ my: 1 }} />
         <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-          <Pagination 
-            count={numPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-          />
+          <Pagination count={numPages} page={page} onChange={handlePageChange} color="primary" />
         </div>
       </AccordionDetails>
     </Accordion>
-  )
+  );
 }

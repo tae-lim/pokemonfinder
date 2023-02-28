@@ -12,26 +12,38 @@ const Header = () => {
   const { user, handleLogout } = useContext(AuthContext);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (!user && pathname === '/') {
-      navigate('/login')
+      navigate('/login');
     }
-  }, [user])
+  }, [user]);
 
   return (
-    <Box display="flex" height="100px" justifyContent="space-between" alignItems="center" style={{backgroundColor: "#3466AF"}}>
-      {
-        user && pathname === '/' && 
-        <PokemonTypography variant="h2" style={{ marginLeft: '30px'}}>
+    <Box
+      display="flex"
+      height="100px"
+      justifyContent="space-between"
+      alignItems="center"
+      style={{ backgroundColor: '#3466AF' }}
+    >
+      {user && pathname === '/' && (
+        <PokemonTypography variant="h2" style={{ marginLeft: '30px' }}>
           Pokefinder
         </PokemonTypography>
-      }
-      <Box style={{ marginLeft: 'auto' }} >
-        {user && <Typography style={ {cursor: 'pointer', marginRight: '30px', color: "white"} } onClick={handleLogout}>Logout</Typography>}
+      )}
+      <Box style={{ marginLeft: 'auto' }}>
+        {user && (
+          <Typography
+            style={{ cursor: 'pointer', marginRight: '30px', color: 'white' }}
+            onClick={handleLogout}
+          >
+            Logout
+          </Typography>
+        )}
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default Header;

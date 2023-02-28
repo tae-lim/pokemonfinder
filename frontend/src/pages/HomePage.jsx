@@ -8,22 +8,22 @@ import PokemonModal from '../components/PokemonModal';
 import PokemonAddModal from '../components/PokemonAddModal';
 
 const uclaCenter = {
-	lat: 34.0700,
-	lng: -118.4398
+  lat: 34.07,
+  lng: -118.4398
 };
 
 export default function HomePage() {
-	const { user } = useContext(AuthContext);
-	const [center, setCenter] = useState(uclaCenter);
-	const [pokemon, setPokemon] = useState([]);
-	const [favoritePokemon, setFavoritePokemon] = useState([]);
-	const [selectedPokemon, setSelectedPokemon] = useState({});
-	const [pokemonDetailModalIsOpen, setPokemonDetailModalIsOpen] = useState(false);
-	const [pokemonAddModalIsOpen, setPokemonAddModalIsOpen] = useState(false);
+  const { user } = useContext(AuthContext);
+  const [center, setCenter] = useState(uclaCenter);
+  const [pokemon, setPokemon] = useState([]);
+  const [favoritePokemon, setFavoritePokemon] = useState([]);
+  const [selectedPokemon, setSelectedPokemon] = useState({});
+  const [pokemonDetailModalIsOpen, setPokemonDetailModalIsOpen] = useState(false);
+  const [pokemonAddModalIsOpen, setPokemonAddModalIsOpen] = useState(false);
 
-	useEffect(() => {
+  useEffect(() => {
     fetchPokemon();
-		fetchFavoritePokemon();
+    fetchFavoritePokemon();
   }, []);
 
   const fetchPokemon = async () => {
@@ -35,12 +35,12 @@ export default function HomePage() {
       } else {
         throw Error('Unable to retrive Pokemon List');
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
-  }
+  };
 
-	const fetchFavoritePokemon = async () => {
+  const fetchFavoritePokemon = async () => {
     try {
       const res = await fetch(`http://localhost:8000/api/users/${user.user_id}/favorites/pokemon`);
       if (res.status === 200) {
@@ -49,38 +49,47 @@ export default function HomePage() {
       } else {
         throw Error('Unable to retrive Favorite Pokemon List');
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
-  }
+  };
 
-	const handleClick=(e, pokemon) => {
-		setSelectedPokemon(pokemon);
+  const handleClick = (e, pokemon) => {
+    setSelectedPokemon(pokemon);
     setPokemonDetailModalIsOpen(true);
-		setCenter({
-			lat: Number(pokemon.lat),
-			lng: Number(pokemon.lng)
-		});
-	}
+    setCenter({
+      lat: Number(pokemon.lat),
+      lng: Number(pokemon.lng)
+    });
+  };
 
   return (
-		<Container display="flex" maxWidth="xl">
-			<Header />
-			<Box display="flex" justifyContent="space-between" width="100%" height="80.75vh">
-				<Sidebar pokemon={pokemon} favoritePokemon={favoritePokemon} handleClick={handleClick} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}/>
-				<Map pokemon={pokemon} center={center} handleClick={handleClick} />		
-			</Box>
-			<PokemonModal 
-				pokemonDetailModalIsOpen={pokemonDetailModalIsOpen} 
-				setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen} 
-				pokemon={pokemon} 
-				setPokemon={setPokemon}
-				favoritePokemon={favoritePokemon}
-				setFavoritePokemon={setFavoritePokemon}
-				selectedPokemon={selectedPokemon}
-				setCenter={setCenter}
-			/>
-			<PokemonAddModal pokemonAddModalIsOpen={pokemonAddModalIsOpen} setPokemonAddModalIsOpen={setPokemonAddModalIsOpen} setNewPokemon={setPokemon}/>
-		</Container>
-	)
+    <Container display="flex" maxWidth="xl">
+      <Header />
+      <Box display="flex" justifyContent="space-between" width="100%" height="80.75vh">
+        <Sidebar
+          pokemon={pokemon}
+          favoritePokemon={favoritePokemon}
+          handleClick={handleClick}
+          setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}
+        />
+        <Map pokemon={pokemon} center={center} handleClick={handleClick} />
+      </Box>
+      <PokemonModal
+        pokemonDetailModalIsOpen={pokemonDetailModalIsOpen}
+        setPokemonDetailModalIsOpen={setPokemonDetailModalIsOpen}
+        pokemon={pokemon}
+        setPokemon={setPokemon}
+        favoritePokemon={favoritePokemon}
+        setFavoritePokemon={setFavoritePokemon}
+        selectedPokemon={selectedPokemon}
+        setCenter={setCenter}
+      />
+      <PokemonAddModal
+        pokemonAddModalIsOpen={pokemonAddModalIsOpen}
+        setPokemonAddModalIsOpen={setPokemonAddModalIsOpen}
+        setNewPokemon={setPokemon}
+      />
+    </Container>
+  );
 }
