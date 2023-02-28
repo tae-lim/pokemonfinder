@@ -136,8 +136,6 @@ export default function PokemonModal({
     return distance.toFixed(2);
   };
 
-  console.log('p', selectedPokemon);
-
   return (
     <Modal
       open={pokemonDetailModalIsOpen || false}
