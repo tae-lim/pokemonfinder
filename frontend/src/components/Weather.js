@@ -7,19 +7,19 @@ export default function Weather({ lat, lng, location, happiness }) {
   useEffect(() => {
     const socket = new WebSocket('ws://127.0.0.1:8000/ws/socket-server/');
 
-		// eslint-disable-next-line no-use-before-define
+		// eslint-disable-next-line 
     socket.onopen = function (event) {
       console.log('WebSocket connection established.');
       socket.send(JSON.stringify({ lat, lng }));
     };
 
-	  // eslint-disable-next-line no-use-before-define
+	  // eslint-disable-next-line
     socket.onmessage = function (event) {
       const data = JSON.parse(event.data);
       setWeatherData(data);
     };
 
-		// eslint-disable-next-line no-use-before-define
+		// eslint-disable-next-line
     socket.onclose = function (event) {
       console.log('WebSocket connection closed.');
     };

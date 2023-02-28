@@ -14,6 +14,7 @@ function Map(props) {
   };
 
   return (
+		// eslint-disable-next-line
     <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
       <GoogleMap mapContainerStyle={containerStyle} center={props.center || {}} zoom={15}>
         {/* Child components, such as markers, info windows, etc. */}
