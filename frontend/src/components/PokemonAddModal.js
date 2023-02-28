@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import { Modal, Box, Typography, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import Papa from 'papaparse';
 import { AToJPolylines, KtoZPolylines } from '../utils/polylines';
+import { PokeballIcon } from '../icons/icons';
 
 export default function PokemonAddModal({
   pokemonAddModalIsOpen,
@@ -9,8 +10,10 @@ export default function PokemonAddModal({
   setNewPokemon
 }) {
   const [pokemon, setPokemon] = useState([]);
+	const [uploadClicked, setUploadClicked] = useState(false);
 
   const handleCSVUpload = (e) => {
+		setUploadClicked(true);
     Papa.parse(e.target.files[0], {
       header: true,
       skipEmptyLines: true,
@@ -57,6 +60,7 @@ export default function PokemonAddModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPokemonAddModalIsOpen(false);
+
     try {
       if (!pokemon.length) return;
       const res = await fetch('http://127.0.0.1:8000/api/pokefinder/', {
@@ -69,6 +73,7 @@ export default function PokemonAddModal({
       if (res.status === 200 || res.status === 201) {
         const data = await res.json();
         setNewPokemon(data);
+				handleCancel();
       } else {
         throw Error('Unable to save pokemon');
       }
@@ -77,6 +82,11 @@ export default function PokemonAddModal({
     }
   };
 
+	const handleCancel = () => {
+		setPokemon([]);
+		setUploadClicked(false);
+	}
+ 
   return (
     <Modal open={pokemonAddModalIsOpen || false} onClose={() => setPokemonAddModalIsOpen(false)}>
       <Box
@@ -95,18 +105,70 @@ export default function PokemonAddModal({
           flexDirection: 'column',
           padding: '50px'
         }}>
-        <Typography id="modal-add-pokemon-title" variant="h6">
-          Add Pokemon
+				<Box display="flex" flexDirection="center" alignItems="center">
+					<PokeballIcon color="red" />
+					<Typography sx={{marginLeft:"20px", marginRight:"20px"}} id="modal-add-pokemon-title" variant="h5">
+						Add Pokemon
+					</Typography>
+					<PokeballIcon color="red" />
+				</Box>
+				<img src="https://i.pinimg.com/564x/fc/72/64/fc7264aee3d47b8b8065a1903b71d9be.jpg" alt="Gotta Catch'em All" />
+				<TableContainer sx={{ border: '1px solid black'}}>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell>Pokemon</TableCell>
+								<TableCell>Lat</TableCell>
+								<TableCell>Long</TableCell>
+								<TableCell>Type</TableCell>
+								<TableCell>Location</TableCell>
+								<TableCell>Latest Moves</TableCell>
+								<TableCell>Sprite</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							<TableRow>
+								<TableCell>Mew</TableCell>
+								<TableCell>34.10214701</TableCell>
+								<TableCell>-118.9104645</TableCell>
+								<TableCell>Psychic</TableCell>
+								<TableCell>Floaroma Town</TableCell>
+								<TableCell>[shadow-ball, ancient-power, future-sight, whirlpool]</TableCell>
+								<TableCell>http://www.pokemon.com/mew/img</TableCell>
+							</TableRow>
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<Typography sx={{marginBottom:"20px", marginTop:"20px", color:"grey"}} id="modal-add-pokemon-description">
+          You can add Pokemon here. Currently only supports .csv
         </Typography>
-        <Typography id="modal-add-pokemon-description">
-          You can add Pokemon here. Currently supports .csv
-        </Typography>
-        <Box sx={{ height: '50px', width: '100%' }}>
-          <input type="file" name="file" accept=".csv" onChange={handleCSVUpload} />
-        </Box>
-        <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
-          Submit
-        </Button>
+
+				{
+				uploadClicked ? 
+					<Box display="flex" justifyContent="space-around">
+						<Button sx={{marginRigh: '10px'}}  variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+							Submit
+						</Button>
+						<Button sx={{marginLeft: '10px'}} variant="contained" color="primary" fullWidth onClick={handleCancel}>
+						Cancel
+					</Button>
+					</Box> : 
+					<Button
+						variant="contained"
+						component="label"
+						>
+						Upload File
+						<input
+							type="file"
+							accept=".csv"
+							onChange={handleCSVUpload}
+							hidden
+						/>
+						</Button>
+					
+				}
+				
+
       </Box>
     </Modal>
   );

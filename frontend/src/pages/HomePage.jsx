@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Divider, Box } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import AuthContext from '../context/AuthContext';
 import Map from '../components/Map';
 import Sidebar from '../components/Sidebar';
@@ -64,7 +64,7 @@ export default function HomePage() {
   };
 
   return (
-    <Container display="flex" maxWidth="xl">
+    <Container display="flex" maxWidth="xl" border="5px solid black">
       <Header />
       <Box display="flex" justifyContent="space-between" width="100%" height="80.75vh">
         <Sidebar
