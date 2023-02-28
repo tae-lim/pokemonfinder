@@ -58,18 +58,19 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         }
         images = {
             'image': external_data['sprites']['other']['official-artwork']['front_default'],
-            'sprite': external_data['sprites']['front_default']
+            'sprite': initial_data['Sprite'] or external_data['sprites']['front_default']
         }
+        if initial_data['Lat'] and initial_data['Long']:
+            data['lat'] = "{:.6f}".format(float(initial_data['Lat']))
+            data['lng'] = "{:.6f}".format(float(initial_data['Long']))
         data['name'] = initial_data['Pokemon']
-        data['lat'] = initial_data['Lat']
-        data['lng'] = initial_data['Long']
         data['polyline'] = initial_data['polyline']
         data['height'] = external_data['height']
         data['weight'] = external_data['weight']
         data['types'] = [type['type']['name'] for type in external_data['types']]
         data['stats'] = stats
         data['images'] = images
-        data['moves'] = self.calc_most_recent_moves(external_data['moves'], 60)
+        data['moves'] = self.calc_most_recent_moves(external_data['moves'], 60, initial_data['Latest Moves'])
 
         return data
     
@@ -85,7 +86,13 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         data['has_gender_differences'] = external_data['has_gender_differences']
         data['description'] = self.find_english_description(external_data["flavor_text_entries"])
 
-    def calc_most_recent_moves(self, moves, level):
+    def calc_most_recent_moves(self, moves, level, initial_moves):
+        if initial_moves:
+            try: 
+                moves = json.load(initial_moves)
+                return moves
+            except:
+                pass
         move_objs = []
 
         for move_data in moves:
@@ -103,7 +110,10 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         filtered_moves = filter(lambda move: move["level_learned_at"] <= level, sorted_moves)
         return list(filtered_moves)[:4]
 
-    def fetch_location(self, data):
+    def fetch_location(self, data, location):
+        if location:
+            data['location_area_encounters'] = location.replace(' ', '-')
+            return
         res = requests.get(f'https://pokeapi.co/api/v2/pokemon/{data["name"].lower()}/encounters')
         external_data = res.json()
         location = None
@@ -121,7 +131,7 @@ class PokemonListCreateAPIView(generics.ListCreateAPIView):
         for item in initial_data:
             obj = self.fetch_pokemon(item)
             self.fetch_pokemon_species(obj)
-            self.fetch_location(obj)
+            self.fetch_location(obj, item['Location'])
             objects.append(obj)
 
         serializer = self.get_serializer(data=objects, many=True)

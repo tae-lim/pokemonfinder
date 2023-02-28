@@ -136,6 +136,8 @@ export default function PokemonModal({
     return distance.toFixed(2);
   };
 
+	console.log('p', selectedPokemon)
+
   return (
     <Modal
       open={pokemonDetailModalIsOpen || false}
@@ -162,18 +164,10 @@ export default function PokemonModal({
             flexDirection="column"
             justifyContent="space-around"
             alignItems="center">
-						<Typography alignSelf="flex-start" width="50%">
-              Distance:{' '}
-              {calcDistance(
-                selectedPokemonDetail?.lat,
-                selectedPokemonDetail?.lng,
-                uclaCoordinates.lat,
-                uclaCoordinates.lng
-              )}{' '}
-              KM
-            </Typography>
-            <img src={selectedPokemonDetail?.images?.image} alt="mew" />
-            <Box display="flex" flexDirection="row">
+						<Box boxShadow={3}>
+            	<img src={selectedPokemonDetail?.images?.image} alt={selectedPokemonDetail?.name} />
+						</Box>
+            <Box display="flex" flexDirection="row" marginTop="20px">
               {selectedPokemonDetail?.moves?.map((move, idx) => {
                 return (
                   <Fragment key={`${idx}-${move}`}>
@@ -181,7 +175,11 @@ export default function PokemonModal({
                       display="flex"
                       justifyContent="center"
                       border="1px solid black"
-                      width="120px">
+											borderRadius="5%"
+                      width="120px"
+											marginRight="5px"
+										
+										>
                       <Typography>{move.move_name?.split('-').map((move => move[0].toUpperCase() + move.slice(1))).join(' ')}</Typography>
                     </Box>
                   </Fragment>
@@ -197,7 +195,7 @@ export default function PokemonModal({
             alignItems="center">
             <Box>
               <Box display="flex" justifyContent="space-between">
-                <Typography id="modal-pokemon-title" variant="h6" component="h2" marginLeft="10px">
+                <Typography id="modal-pokemon-title" variant="h4" component="h2" marginLeft="10px">
                   {selectedPokemonDetail?.name}
                 </Typography>
                 <Box display="flex" width="40%" flexDirection="row" justifyContext="center">
@@ -270,7 +268,7 @@ export default function PokemonModal({
                       data: [
                         selectedPokemonDetail?.stats?.hp,
                         selectedPokemonDetail?.stats?.attack,
-                        selectedPokemonDetail?.stats?.defebnse,
+                        selectedPokemonDetail?.stats?.defense,
                         selectedPokemonDetail?.stats?.sp_attack,
                         selectedPokemonDetail?.stats?.sp_defense,
                         selectedPokemonDetail?.stats?.speed
@@ -283,9 +281,19 @@ export default function PokemonModal({
                 }}
               />
             </Box>
-            <Box display="flex" width="100%" justifyContent="center">
+            <Box display="flex" width="100%" justifyContent="space-around" alignItems="center">
+							<Typography width="25%">
+										Distance:{' '}
+										{calcDistance(
+											selectedPokemonDetail?.lat,
+											selectedPokemonDetail?.lng,
+											uclaCoordinates.lat,
+											uclaCoordinates.lng
+										)}{' '}
+										KM
+									</Typography>
               {deleteClicked ? (
-                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                <Box width="75%" display="flex" flexDirection="row" justifyContent="space-between">
                   <Button width="40%" onClick={(e) => handleDelete(e, selectedPokemon.id)}>
                     Permanently Delete
                   </Button>
