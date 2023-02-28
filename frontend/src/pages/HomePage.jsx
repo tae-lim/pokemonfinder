@@ -58,8 +58,8 @@ export default function HomePage() {
     setSelectedPokemon(pokemon);
     setPokemonDetailModalIsOpen(true);
     setCenter({
-      lat: Number(pokemon.lat),
-      lng: Number(pokemon.lng)
+      lat: Number(pokemon.lat) || uclaCenter.lat,
+      lng: Number(pokemon.lng) || uclaCenter.lng
     });
   };
 
