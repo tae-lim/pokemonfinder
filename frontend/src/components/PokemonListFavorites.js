@@ -10,6 +10,7 @@ import {
   Pagination,
   TextField
 } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import { PokeballIcon } from '../icons/icons';
 
 export default function PokemonListFavorites(props) {
@@ -32,7 +33,7 @@ export default function PokemonListFavorites(props) {
   return (
     <Accordion>
       <AccordionSummary
-        /* expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}>
+        expandIcon={<ExpandMore />} aria-controls={`pokemon-sidebar-content`}>
         <PokeballIcon color="green" />
         <ListItemText primary="Favorited Pokemon" style={{ marginLeft: '10px' }} s />
       </AccordionSummary>

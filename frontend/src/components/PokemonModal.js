@@ -162,6 +162,16 @@ export default function PokemonModal({
             flexDirection="column"
             justifyContent="space-around"
             alignItems="center">
+						<Typography alignSelf="flex-start" width="50%">
+              Distance:{' '}
+              {calcDistance(
+                selectedPokemonDetail?.lat,
+                selectedPokemonDetail?.lng,
+                uclaCoordinates.lat,
+                uclaCoordinates.lng
+              )}{' '}
+              KM
+            </Typography>
             <img src={selectedPokemonDetail?.images?.image} alt="mew" />
             <Box display="flex" flexDirection="row">
               {selectedPokemonDetail?.moves?.map((move, idx) => {
@@ -172,23 +182,12 @@ export default function PokemonModal({
                       justifyContent="center"
                       border="1px solid black"
                       width="120px">
-                      <Typography>{move.move_name.split('-').join(' ')}</Typography>
+                      <Typography>{move.move_name?.split('-').map((move => move[0].toUpperCase() + move.slice(1))).join(' ')}</Typography>
                     </Box>
                   </Fragment>
                 );
               })}
             </Box>
-            <Typography alignSelf="center" width="50%">
-              {' '}
-              Distance:{' '}
-              {calcDistance(
-                selectedPokemonDetail?.lat,
-                selectedPokemonDetail?.lng,
-                uclaCoordinates.lat,
-                uclaCoordinates.lng
-              )}{' '}
-              KM
-            </Typography>
           </Box>
           <Divider variant="middle" color="black" sx={{ my: 1 }} />
           <Box
@@ -255,7 +254,7 @@ export default function PokemonModal({
                   </Typography>
                 </Box>
                 <Weather
-                  location={selectedPokemonDetail?.location_area_encounters}
+                  location={selectedPokemonDetail?.location_area_encounters?.split('-').map((move => move[0].toUpperCase() + move.slice(1))).join(' ')}
                   lat={selectedPokemonDetail?.lat}
                   lng={selectedPokemonDetail?.lng}
                   happiness={selectedPokemonDetail?.stats?.happiness}

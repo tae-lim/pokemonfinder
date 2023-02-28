@@ -110,7 +110,7 @@ export default function PokemonAddModal({
 					<Typography sx={{marginLeft:"20px", marginRight:"20px"}} id="modal-add-pokemon-title" variant="h5">
 						Add Pokemon
 					</Typography>
-					<PokeballIcon color="red" />
+					<PokeballIcon color="blue" />
 				</Box>
 				<img src="https://i.pinimg.com/564x/fc/72/64/fc7264aee3d47b8b8065a1903b71d9be.jpg" alt="Gotta Catch'em All" />
 				<TableContainer sx={{ border: '1px solid black'}}>
@@ -157,7 +157,7 @@ export default function PokemonAddModal({
 						variant="contained"
 						component="label"
 						>
-						Upload File
+						Upload CSV
 						<input
 							type="file"
 							accept=".csv"

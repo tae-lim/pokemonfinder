@@ -16,7 +16,7 @@ class WeatherConsumer(AsyncWebsocketConsumer):
         try:
             lat = json.loads(text_data)["lat"]
             lng = json.loads(text_data)["lng"]
-            url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lng}&appid={WEATHER_API_KEY}"
+            url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat or 32.07}&lon={lng or -118.4398}&appid={WEATHER_API_KEY}"
 
             response = requests.get(url)
             response.raise_for_status()
