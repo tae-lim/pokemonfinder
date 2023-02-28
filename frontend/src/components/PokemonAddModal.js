@@ -94,8 +94,7 @@ export default function PokemonAddModal({
           alignItems: 'center',
           flexDirection: 'column',
           padding: '50px'
-        }}
-      >
+        }}>
         <Typography id="modal-add-pokemon-title" variant="h6">
           Add Pokemon
         </Typography>

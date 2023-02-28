@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
   Divider,
-  Button,
-  Drawer,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  ExpandMoreIcon,
-  List,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -36,8 +32,7 @@ export default function PokemonListFavorites(props) {
   return (
     <Accordion>
       <AccordionSummary
-        /*expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}
-      >
+        /* expandIcon={<ExpandMoreIcon />}*/ aria-controls={`pokemon-sidebar-content`}>
         <PokeballIcon color="green" />
         <ListItemText primary="Favorited Pokemon" style={{ marginLeft: '10px' }} s />
       </AccordionSummary>
@@ -54,16 +49,18 @@ export default function PokemonListFavorites(props) {
         <Divider variant="middle" color="primary" sx={{ my: 1 }} />
         {paginatedPokemon &&
           paginatedPokemon.map((item) => (
-            <ListItem sx={{ cursor: 'pointer' }} onClick={(e) => props.handleClick(e, item)}>
-              <ListItemIcon>
-                <img
-                  src={item.images.sprite}
-                  alt={item.name}
-                  style={{ marginRight: '5px', width: '30px', height: '30px' }}
-                />
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
+            <Fragment key={item.id}>
+              <ListItem sx={{ cursor: 'pointer' }} onClick={(e) => props.handleClick(e, item)}>
+                <ListItemIcon>
+                  <img
+                    src={item.images.sprite}
+                    alt={item.name}
+                    style={{ marginRight: '5px', width: '30px', height: '30px' }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={item.name} />
+              </ListItem>
+            </Fragment>
           ))}
         <Divider variant="middle" color="primary" sx={{ my: 1 }} />
         <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>

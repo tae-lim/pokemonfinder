@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import AuthContext from '../context/AuthContext';
 import { Modal, Box, Divider, Typography, Button } from '@mui/material';
 import { Star, StarBorder } from '@mui/icons-material';
@@ -141,8 +141,7 @@ export default function PokemonModal({
       open={pokemonDetailModalIsOpen || false}
       onClose={() => handleClose()}
       aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+      aria-describedby="modal-modal-description">
       <Box
         sx={{
           position: 'absolute',
@@ -156,27 +155,26 @@ export default function PokemonModal({
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column'
-        }}
-      >
+        }}>
         <Box display="flex" flexDirection="row">
           <Box
             display="flex"
             flexDirection="column"
             justifyContent="space-around"
-            alignItems="center"
-          >
+            alignItems="center">
             <img src={selectedPokemonDetail?.images?.image} alt="mew" />
             <Box display="flex" flexDirection="row">
-              {selectedPokemonDetail?.moves?.map((move) => {
+              {selectedPokemonDetail?.moves?.map((move, idx) => {
                 return (
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    border="1px solid black"
-                    width="120px"
-                  >
-                    <Typography>{move.move_name.split('-').join(' ')}</Typography>
-                  </Box>
+                  <Fragment key={`${idx}-${move}`}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      border="1px solid black"
+                      width="120px">
+                      <Typography>{move.move_name.split('-').join(' ')}</Typography>
+                    </Box>
+                  </Fragment>
                 );
               })}
             </Box>
@@ -197,26 +195,26 @@ export default function PokemonModal({
             display="flex"
             flexDirection="column"
             justifyContent="space-between"
-            alignItems="center"
-          >
+            alignItems="center">
             <Box>
               <Box display="flex" justifyContent="space-between">
                 <Typography id="modal-pokemon-title" variant="h6" component="h2" marginLeft="10px">
                   {selectedPokemonDetail?.name}
                 </Typography>
                 <Box display="flex" width="40%" flexDirection="row" justifyContext="center">
-                  {selectedPokemonDetail?.types?.map((type) => (
-                    <Box
-                      ml="10px"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      height="40px"
-                      width="50%"
-                      sx={{ backgroundColor: pokemonTypeColors[type], borderRadius: '10%' }}
-                    >
-                      <Typography>{type[0].toUpperCase() + type.slice(1)}</Typography>
-                    </Box>
+                  {selectedPokemonDetail?.types?.map((type, idx) => (
+                    <Fragment key={`${idx}-${type}`}>
+                      <Box
+                        ml="10px"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height="40px"
+                        width="50%"
+                        sx={{ backgroundColor: pokemonTypeColors[type], borderRadius: '10%' }}>
+                        <Typography>{type[0].toUpperCase() + type.slice(1)}</Typography>
+                      </Box>
+                    </Fragment>
                   ))}
                 </Box>
                 {selectedPokemonDetail?.favorite ? (
@@ -240,14 +238,12 @@ export default function PokemonModal({
                 flexDirection="row"
                 sx={{ mt: 1 }}
                 justifyContent="space-between"
-                alignItems="center"
-              >
+                alignItems="center">
                 <Box
                   display="flex"
                   flexDirection="column"
                   width="40%"
-                  justifyContent="space-between"
-                >
+                  justifyContent="space-between">
                   <Typography id="modal-pokemon-height">
                     {`Height: ${selectedPokemonDetail?.height / 10}m`}
                   </Typography>

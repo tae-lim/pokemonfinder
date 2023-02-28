@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
-import PokemonModal from './PokemonModal';
 import { pokemonTypeColors } from '../utils/pokemonTypeColors';
 
 const containerStyle = {
@@ -9,9 +8,6 @@ const containerStyle = {
 };
 
 function Map(props) {
-  const [selectedPokemon, setSelectedPokemon] = useState({});
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const getRandomTypeColor = (types) => {
     const idx = Math.floor(Math.random() * types.length);
     return pokemonTypeColors[types[idx]];

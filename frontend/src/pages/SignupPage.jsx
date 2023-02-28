@@ -69,8 +69,7 @@ export default function SignupPage() {
             color="primary"
             fullWidth
             sx={{ marginBottom: 2 }}
-            type="submit"
-          >
+            type="submit">
             Signup
           </Button>
           <Box display="flex" justifyContent="center">

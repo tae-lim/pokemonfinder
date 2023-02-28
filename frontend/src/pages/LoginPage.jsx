@@ -35,8 +35,7 @@ export default function LoginPage() {
             color="primary"
             fullWidth
             sx={{ marginBottom: 2 }}
-            type="submit"
-          >
+            type="submit">
             Login
           </Button>
           <Box display="flex" justifyContent="center">

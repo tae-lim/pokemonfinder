@@ -6,12 +6,11 @@ export const PokeballIcon = ({ color }) => {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      stroke-width="2"
+      strokeWidth="2"
       stroke={color}
       fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
+      strokeLinecap="round"
+      strokeLinejoin="round">
       {' '}
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />{' '}
       <circle cx="9" cy="9" r="9" transform="translate(3 3)" /> <circle cx="12" cy="12" r="3" />{' '}
