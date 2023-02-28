@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
 import { pokemonTypeColors } from '../utils/pokemonTypeColors';
 
@@ -20,7 +20,7 @@ function Map(props) {
         {/* Child components, such as markers, info windows, etc. */}
         <Marker position={{ lat: 34.07, lng: -118.4398 }} />
         {props.pokemon &&
-          props.pokemon.map((pokemon) => {
+          props.pokemon.map((pokemon, idx) => {
             const path = pokemon.polyline;
             const color = getRandomTypeColor(pokemon.types);
 
@@ -39,14 +39,14 @@ function Map(props) {
               zIndex: 1
             };
             return (
-              <>
+              <Fragment key={`${idx}-${pokemon}`}>
                 {pokemon?.polyline && <Polyline path={path} options={options} />}
                 <Marker
                   icon={pokemon?.images?.sprite}
                   position={{ lat: Number(pokemon.lat), lng: Number(pokemon.lng) }}
                   onClick={(e) => props.handleClick(e, pokemon)}
                 />
-              </>
+              </Fragment>
             );
           })}
       </GoogleMap>
